@@ -1,0 +1,142 @@
+/* ==========================================================================
+   MAXIMAL MODERN CSS RESET
+   ========================================================================== */
+
+/* 1. Налаштування розрахунку розмірів (Box-Sizing) */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Налаштування кореневих елементів та плавного скролу */
+html {
+    /* Плавний скрол за замовчуванням (не ламає доступність) */
+    scroll-behavior: smooth;
+    /* Запобігає зміні розміру тексту при зміні орієнтації на мобільних */
+    -webkit-text-size-adjust: 100%;
+    /* Прибирає затримку кліку на тачскрінах */
+    touch-action: manipulation;
+}
+
+/* Прибираємо плавну прокрутку для користувачів, які її вимкнули в ОС */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 3. Базові налаштування тіла сторінки */
+body {
+    min-height: 100vh;
+    /* Покращене згладжування шрифтів */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Оптимізація рендерингу тексту */
+    text-rendering: optimizeLegibility;
+    line-height: 1.5;
+}
+
+/* 4. Прибираємо маркери у списків з класами (зберігаємо для стандартних) */
+ul,
+ol {
+    list-style: none;
+}
+
+/* 5. Медіа-елементи (адаптивність та блочна поведінка) */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* 6. Форми та елементи керування (скидання та успадкування шрифтів) */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    border: none;
+    background: transparent;
+}
+
+/* Прибираємо закруглення в Safari для input */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+textarea {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Зручна робота з textarea */
+textarea {
+    resize: vertical;
+}
+
+/* Курсор-вказівник для інтерактивних елементів */
+button,
+select,
+label,
+[role="button"] {
+    cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+    cursor: not-allowed;
+}
+
+/* 7. Посилання */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* 8. Заголовки (прибираємо вплив на висоту рядка) */
+h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    text-wrap: balance; /* Рівномірний перенос слів у заголовках */
+}
+
+p {
+    overflow-wrap: break-word;
+    text-wrap: pretty; /* Запобігає висячим словам в кінці параграфа */
+}
+
+/* 9. Таблиці */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 10. Доступність (приховування елементів для екранів, але збереження для screen-readers) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

@@ -1,0 +1,148 @@
+/* Контейнер всієї секції (тепер він тримає відео всередині) */
+.about {
+    position: relative; /* 👈 КРИТИЧНО: обмежує абсолютне відео всередині секції */
+    width: 100%;
+    min-height: 100vh; /* Робимо висоту на весь екран, або задайте потрібний padding */
+    padding: 4rem 10rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Ховає шматки відео, які вилазять за межі */
+    background-color: #0b0b0c; /* Фоновий колір, поки відео завантажується */
+}
+
+
+/* Стилі для фонового відео */
+.about__video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* Відео масштабується без спотворення */
+    z-index: 1; /* Кладемо на шар 1 */
+}
+
+/* Напівпрозоре затемнення, щоб текст не зливався з відео */
+.about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 11, 12, 0.75); /* Темний шар із 75% непрозорості */
+    z-index: 2; /* Перекриває відео */
+}
+
+/* Головний контент — виводимо на самий передній план */
+.about__content {
+    position: relative; /* 👈 КРИТИЧНО */
+    z-index: 3; /* 👈 Вище за відео (1) та вище за затемнення (2) */
+    width: 100%;
+    max-width: 70rem;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Блок з текстом */
+.about__text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Заголовок */
+.about__content-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Опис (зробив текст трохи білішим, щоб краще читався поверх відео) */
+.about__content-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+/* Сітка для міні-карток з цифрами */
+.about__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Картки-досягнення (робимо їх більш "скляними") */
+.about__stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px); /* Ефект легкого розмиття відео під карткою */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 30px 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.about__stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 69, 0, 0.4);
+    box-shadow: 0 15px 30px rgba(255, 69, 0, 0.15);
+    background: rgba(255, 69, 0, 0.04);
+}
+
+.about__stat-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.about__stat-card:hover .about__stat-num {
+    color: #ff4500;
+}
+
+.about__stat-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Спеціальний акцентний блок */
+.about__stat-card--accent {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(255, 69, 0, 0.08), rgba(255, 117, 0, 0.03));
+    backdrop-filter: blur(5px);
+    border-color: rgba(255, 69, 0, 0.2);
+}
+
+.about__stat-card--accent .about__stat-num {
+    color: #ff4500;
+}
+
+/* Адаптивність */
+@media (max-width: 992px) {
+    .about { padding: 60px 2rem; }
+    .about__content { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 480px) {
+    .about__stats-grid { grid-template-columns: 1fr; }
+    .about__stat-card--accent { grid-column: span 1; }
+}

@@ -1,0 +1,51 @@
+
+.header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: balance;
+    padding: 1rem 10rem;
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.header__nav-list{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: balance;
+    gap: 3rem;
+    padding:0 1rem;
+}
+
+/* Робимо самі пункти списку відносними */
+.header__nav-item {
+    list-style: none; /* Про всяк випадок прибираємо маркери списку */
+}
+
+/* Базовий стиль для посилань у меню */
+.header__nav-item a {
+    display: inline-block; /* 👈 КРИТИЧНО: дозволяє працювати анімації translateY */
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px; /* Округлення для красивого фону та тіні */
+    border: 1px solid transparent; /* Запобігає смиканню тексту при появі border */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease; /* Плавність для ВСІХ змін */
+}
+
+/* Преміальний неоновий ховер-ефект для пунктів меню */
+.header__nav-item a:hover {
+    transform: translateY(-4px); /* Зменшив до -4px, бо -10px для меню — це занадто різкий стрибок */
+    background-color: rgba(255, 69, 0, 0.05); /* Легкий помаранчевий відтінок всередині */
+    border-color: rgba(255, 69, 0, 0.4);
+    color: #ff4500; /* Зміна кольору тексту на помаранчевий додасть стилю */
+    box-shadow: 0 10px 20px rgba(255, 69, 0, 0.15),
+    0 0 8px rgba(255, 69, 0, 0.3);
+}

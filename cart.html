@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+
+<!-- Головний контейнер сторінки кошика -->
+<main class="cart-page">
+    <div class="cart-page-container">
+
+        <!-- Заголовок, винесений вгору над контентом -->
+        <h1 class="cart-page__title">Ваш кошик</h1>
+
+        <div class="cart-page__content">
+
+            <!-- ЛІВА КОЛОНКА: Список товарів -->
+            <section class="cart-items">
+
+                <!-- Товар 1 -->
+                <article class="cart-item">
+                    <div class="cart-item__img-placeholder">Фото</div>
+
+                    <div class="cart-item__info">
+                        <h3 class="cart-item__name">Кухонна дошка "Wood Craft Max"</h3>
+                        <p class="cart-item__meta">Матеріал: Дуб преміум</p>
+                    </div>
+
+                    <!-- Керування кількістю -->
+                    <div class="cart-item__qty">
+                        <button class="cart-item__qty-btn cart-item__qty-btn--minus">−</button>
+                        <input class="cart-item__qty-input" type="number" value="1" min="1" max="99">
+                        <button class="cart-item__qty-btn cart-item__qty-btn--plus">+</button>
+                    </div>
+
+                    <div class="cart-item__price-block">
+                        <span class="cart-item__price">1 200 ₴</span>
+                    </div>
+
+                    <!-- Кнопка видалення (хрестик) -->
+                    <button class="cart-item__remove" aria-label="Видалити товар">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </article>
+
+                <!-- Товар 2 -->
+                <article class="cart-item">
+                    <div class="cart-item__img-placeholder">Фото</div>
+
+                    <div class="cart-item__info">
+                        <h3 class="cart-item__name">Обробна дошка "Slim Classic"</h3>
+                        <p class="cart-item__meta">Матеріал: Горіх темний</p>
+                    </div>
+
+                    <!-- Керування кількістю -->
+                    <div class="cart-item__qty">
+                        <button class="cart-item__qty-btn cart-item__qty-btn--minus">−</button>
+                        <input class="cart-item__qty-input" type="number" value="2" min="1" max="99">
+                        <button class="cart-item__qty-btn cart-item__qty-btn--plus">+</button>
+                    </div>
+
+                    <div class="cart-item__price-block">
+                        <span class="cart-item__price">1 700 ₴</span>
+                    </div>
+
+                    <button class="cart-item__remove" aria-label="Видалити товар">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </article>
+
+            </section>
+
+            <!-- ПРАВА КОЛОНКА: Підсумок (Чек) -->
+            <aside class="cart-summary">
+                <h2 class="cart-summary__title">Підсумок</h2>
+
+                <div class="cart-summary__totals">
+                    <div class="cart-total-row">
+                        <span>Кількість товарів:</span>
+                        <span>3 шт.</span>
+                    </div>
+                    <div class="cart-total-row">
+                        <span>Сума замовлення:</span>
+                        <span>2 900 ₴</span>
+                    </div>
+                    <div class="cart-total-row">
+                        <span>Доставка:</span>
+                        <span class="cart-total-row__shipping">За тарифами ТК</span>
+                    </div>
+                    <hr class="cart-summary__divider">
+                    <div class="cart-total-row cart-total-row--final">
+                        <span>Разом:</span>
+                        <span>2 900 ₴</span>
+                    </div>
+                </div>
+
+                <a href="order.html" class="cart-summary__btn">Оформити замовлення</a>
+                <a href="index.html" class="cart-summary__back-btn">Продовжити покупки</a>
+            </aside>
+
+        </div>
+    </div>
+</main>
+
+
+<script src="js/cart.js"></script>
+</body>
+</html>

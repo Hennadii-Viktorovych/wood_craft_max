@@ -1,0 +1,345 @@
+/* ==========================================================================
+   СТОРІНКА ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
+   ========================================================================== */
+.order-page {
+    background-color: #0b0b0c; /* Преміальний глибокий темний фон */
+    color: #ffffff;
+    padding: 3rem 2px;
+    min-height: 100vh;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.order-container {
+    width: 100%;
+    max-width: 75rem;
+    padding: 0 2rem;
+    position: relative;
+    margin-top: 6rem; /* Відступ під ваш фіксований хедер */
+}
+
+/* Градієнтний заголовок у фірмовому стилі */
+.order-page__title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 4rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Головна сітка на 2 колонки */
+.order-content {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr; /* Ліва колонка з формою трохи ширша */
+    gap: 40px;
+    align-items: start;
+}
+
+/* ==========================================================================
+   ЛІВА КОЛОНКА: ФОРМА
+   ========================================================================== */
+.order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.order-form__section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-form__subtitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ff4500; /* Помаранчевий акцент на підзаголовки */
+    margin: 0 0 5px 0;
+    letter-spacing: 0.5px;
+}
+
+.order-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Поля вводу та селекти */
+.order-form__input,
+.order-form__textarea {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.order-form__input::placeholder,
+.order-form__textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Крутий неоновий фокус при кліку на поле */
+.order-form__input:focus,
+.order-form__textarea:focus {
+    border-color: #ff4500;
+    background-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 12px rgba(255, 69, 0, 0.2);
+}
+
+/* Спеціальний кастомний стиль для випадаючого списку (select) */
+.order-form__select {
+    cursor: pointer;
+    appearance: none; /* Прибираємо стандартну стрілку браузера */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff4500' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 16px;
+}
+
+.order-form__select option {
+    background-color: #161618; /* Темний фон для опцій селекту */
+    color: #fff;
+}
+
+.order-form__textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Стилізація радіокнопок (вибір оплати) */
+.order-form__radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.order-form__radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    user-select: none;
+}
+
+.order-form__radio {
+    display: none; /* Ховаємо стандартну крапку */
+}
+
+/* Кастомне кільце радіокнопки */
+.order-form__radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.order-form__radio:checked + .order-form__radio-custom {
+    border-color: #ff4500;
+    box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
+}
+
+.order-form__radio-custom::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #ff4500;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.order-form__radio:checked + .order-form__radio-custom::after {
+    transform: translate(-50%, -50%) scale(1); /* Проявляємо крапку */
+}
+
+/* ==========================================================================
+   ПРАВА КОЛОНКА: ЧЕК / ПІДСУМОК
+   ========================================================================== */
+.order-summary {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.order-summary__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 25px 0;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 15px;
+}
+
+.order-summary__products {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 240px; /* Якщо товарів багато, з'явиться зручний внутрішній скролл */
+    overflow-y: auto;
+    padding-right: 5px;
+    margin-bottom: 25px;
+}
+
+/* Маленька картка товару у чеку */
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.summary-card__img {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #161618, #222225);
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.summary-card__info {
+    flex: 1;
+}
+
+.summary-card__name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.summary-card__meta {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+}
+
+.summary-card__price {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* Розрахунок цін */
+.order-summary__totals {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.total-row__free {
+    color: #2ed573; /* Зелений колір для безкоштовної доставки чи підказок */
+    font-size: 0.85rem;
+}
+
+.order-summary__divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 5px 0;
+}
+
+/* Рядок фінальної суми «Разом» */
+.total-row--final {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.total-row--final span:last-child {
+    color: #ff4500; /* Вогняна підсвітка фінальної ціни */
+}
+
+/* Головна кнопка підтвердження замовлення з фірмовим ховером */
+.order-summary__btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #ff4500, #ff6a00);
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(255, 69, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-summary__btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 69, 0, 0.45),
+    0 0 10px rgba(255, 69, 0, 0.2);
+}
+
+.order-summary__btn:active {
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ ДЛЯ СТОРІНКИ ЗАМОВЛЕННЯ
+   ========================================================================== */
+@media (max-width: 992px) {
+    .order-content {
+        grid-template-columns: 1fr; /* Згортаємо сітку в одну колонку на планшетах та телефонах */
+        gap: 30px;
+    }
+    /* Переносимо чек замовлення на самий верх (за бажанням), або залишаємо знизу після форми */
+    .order-summary {
+        order: -1; /* Чек буде першим на мобільних, щоб людина бачила, за що платить */
+    }
+    .order-container {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-form {
+        padding: 20px;
+    }
+    .order-form__row {
+        grid-template-columns: 1fr; /* Поля Ім'я / Прізвище стають одне під одним */
+        gap: 20px;
+    }
+    .order-page__title {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+    }
+}

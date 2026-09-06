@@ -1,0 +1,158 @@
+/* ==========================================================================
+   СТОРІНКА ВІДГУКІВ
+   ========================================================================== */
+.reviews-page {
+    background-color: #0b0b0c; /* Фірмовий темний фон */
+    color: #ffffff;
+    padding: 4rem 0;
+    min-height: 100vh;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.reviews-container {
+    width: 100%;
+    max-width: 75rem;
+    padding: 0 2rem;
+    margin-top: 6rem; /* Відступ під фіксований хедер */
+}
+
+/* Градієнтний заголовок сторінки */
+.reviews-page__title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 4rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   СІТКА КАРТОК ВІДГУКІВ
+   ========================================================================== */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 колонки в ряд на десктопі */
+    gap: 30px;
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    border-color 0.4s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 69, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(255, 69, 0, 0.12);
+}
+
+/* Шапка картки */
+.review-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.review-card__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Круглий аватар користувача */
+.review-card__avatar {
+    width: 44px;
+    height: 44px;
+    background-color: #ff4500;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+/* Різні кольори для аватарів для реалістичності */
+.review-card__avatar--m { background-color: #2ed573; }
+.review-card__avatar--d { background-color: #007bff; }
+
+.review-card__name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 3px 0;
+}
+
+.review-card__date {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Візуальні зірочки у картці відгуку */
+.review-card__stars {
+    color: #ff4500;
+    font-size: 1.1rem;
+    text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+/* Текст відгуку */
+.review-card__text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ ДЛЯ СТОРІНКИ ВІДГУКІВ
+   ========================================================================== */
+@media (max-width: 992px) {
+    .reviews-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 колонки на планшетах */
+    }
+}
+
+@media (max-width: 768px) {
+    .reviews-form__row {
+        grid-template-columns: 1fr; /* Поле імені та зірки стають одне під одним */
+        gap: 15px;
+    }
+    .reviews-form__rating {
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .reviews-container {
+        padding: 0 1.5rem;
+    }
+    .reviews-grid {
+        grid-template-columns: 1fr; /* 1 колонка на мобільних */
+    }
+    .reviews-form {
+        padding: 20px;
+    }
+    .reviews-page__title {
+        font-size: 2rem;
+    }
+    .reviews-form__btn {
+        width: 100%; /* Кнопка на всю ширину */
+        text-align: center;
+    }
+}

@@ -1,0 +1,177 @@
+/* ==========================================================================
+   СЕКЦІЯ КАТАЛОГУ
+   ========================================================================== */
+.catalog {
+    background-color: #1a1a1a; /* Глибокий темний фон */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 10rem;
+    margin: 10rem auto;
+    position: relative; /* Встановлює точку відліку для заголовка */
+    overflow: visible !important; /* ГАРАНТУЄ, що текст не обріжеться рамками блока */
+    z-index: 10;
+}
+
+
+
+/* Сітка для трьох карток в одну лінію (на десктопі) */
+.catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; /* Центрує саму сітку всередині каталогу */
+}
+
+/* ==========================================================================
+   КАРТКА ТОВАРУ
+   ========================================================================== */
+.catalog__card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    border-color 0.4s ease;
+}
+
+/* Ефект наведення на картку (Неонове підсвічування та підняття) */
+.catalog__card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255, 69, 0, 0.4);
+    box-shadow: 0 20px 40px rgba(255, 69, 0, 0.15),
+    0 0 1px rgba(255, 69, 0, 0.5);
+}
+
+/* Фото товару / Заглушка */
+.card__img-placeholder {
+    width: 100%;
+    height: 280px;
+    background: linear-gradient(135deg, #161618, #222225);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: transform 0.5s ease;
+}
+
+/* Легке масштабування картинки при наведенні на картку */
+.catalog__card:hover .card__img-placeholder {
+    transform: scale(1.03);
+}
+
+/* Блок з інформацією (ТУТ ОБ'ЄДНАНО ВСІ КОНФЛІКТНІ СТИЛІ) */
+.card__info {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto; /* Кнопка "Купити" займає весь простір, кошик стає поруч */
+    grid-template-rows: auto auto auto;
+    gap: 15px 10px;
+    text-align: left; /* Текст всередині картки вирівнюємо по лівому краю для краси */
+}
+
+.card__title {
+    grid-column: 1 / -1;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.card__price {
+    grid-column: 1 / -1;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ff4500;
+    margin: 0;
+}
+
+/* ==========================================================================
+   КНОПКИ КАРТКИ
+   ========================================================================== */
+.card__btn,
+.card__btn--cart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопка "Купити" */
+.card__btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #ff4500, #ff6a00);
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.card__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+}
+
+.card__btn:active {
+    transform: translateY(0);
+}
+
+/* Кнопка "Кошик" (іконка) */
+.card__btn--cart {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 46px;
+    height: 46px;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card__btn--cart:hover {
+    background: transparent;
+    border-color: #ff4500;
+    color: #ff4500;
+}
+
+.card__btn--cart:active {
+    transform: translateY(0) scale(1);
+}
+
+/* Анімація для JS: коли товар додано в кошик */
+.card__btn--cart.added {
+    background: #2ed573 !important;
+    border-color: #2ed573 !important;
+    color: #fff !important;
+    animation: pop 0.3s ease-in-out;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ
+   ========================================================================== */
+@media (max-width: 992px) {
+    .catalog { padding: 3rem 4rem; } /* Зменшуємо гігантські бокові відступи на планшетах */
+    .catalog__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 576px) {
+    .catalog { padding: 3rem 1.5rem; }
+    .catalog__grid { grid-template-columns: 1fr; }
+}
+

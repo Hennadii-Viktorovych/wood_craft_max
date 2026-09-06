@@ -1,0 +1,26 @@
+[
+    {
+        "id": "ord_6a9d8aea5b453",
+        "name": "аааа",
+        "phone": "аааааа",
+        "subject": "",
+        "message": "Доставка: nova_poshta\nМісто: аааааа\nВідділення: аааааа\nОплата: cash\nааааааааааа",
+        "cart": [
+            {
+                "id": "prod_6a9d851d0bc36",
+                "name": "ввввв",
+                "price": 333333,
+                "qty": 1
+            },
+            {
+                "id": "prod_6a9d8546ed5c4",
+                "name": "ррррр",
+                "price": 5,
+                "qty": 1
+            }
+        ],
+        "total": 333338,
+        "status": "new",
+        "date": "2026-09-06 15:46:50"
+    }
+]

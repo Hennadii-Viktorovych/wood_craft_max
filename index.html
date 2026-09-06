@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/catalog.css">
+    <link rel="stylesheet" href="./css/about.css">
+    <link rel="stylesheet" href="./css/reviews.css">
+    <link rel="stylesheet" href="./css/contact.css">
+    <link rel="stylesheet" href="./css/footer.css">
+</head>
+<body>
+
+<!-- Фірмовий прелоадер wood_craft_max -->
+<div class="preloader" id="preloader">
+    <div class="preloader__content">
+        <!-- Текст, який буде ефектно підсвічуватися -->
+        <h2 class="preloader__logo">wood_craft_max</h2>
+        <!-- Лінія завантаження під текстом -->
+        <div class="preloader__line"></div>
+    </div>
+</div>
+
+
+<header class="header">
+    <a href="index.html" class="header__logo-link"><img src="" alt="" class="header__logo-img">wood_craft_max</a>
+
+    <nav class="header__nav">
+        <ul class="header__nav-list">
+            <li class="header__nav-item"><a href="index.html" class="header__nav-link">Головна</a></li>
+            <li class="header__nav-item"><a href="catalog.html" class="header__nav-link">Каталог</a></li>
+            <li class="header__nav-item"><a href="about.html" class="header__nav-link">Про нас</a></li>
+            <li class="header__nav-item"><a href="reviews.html" class="header__nav-link">Відгуки</a></li>
+            <li class="header__nav-item"><a href="contact.html" class="header__nav-link">Контакти</a></li>
+        </ul>
+    </nav>
+
+    <div class="header__cart">
+        <h2>Кошик</h2>
+        <div id="cart-items"></div>
+        <p>Разом: <span id="total-price">0</span> грн</p>
+        <button id="clear-cart">Очистити кошик</button>
+    </div>
+</header>
+
+<section class="hero">
+
+    <video autoplay loop muted playsinline class="hero-video">
+        <source class="hero__video" src="./images/video/hero-video.mp4" type="video/mp4">
+        Ваш браузер не підтримує відео.
+    </video>
+
+    <div class="hero__content">
+        <h1 class="hero__title">Найкращі кухоні дошки в світі</h1>
+        <p class="hero__text">лфваршцлапрлйцфарйоар</p>
+        <a href="#catalog" class="btn btn--hero">Дізнатись більше</a>
+
+    </div>
+</section>
+
+<section class="catalog reveal">
+
+        <div class="catalog__grid">
+
+            <div class="catalog__card">
+                <div class="card__img-placeholder">Фото товару</div>
+                <div class="card__info">
+                    <h3 class="card__title">Товар 1</h3>
+                    <p class="card__price">1 200 ₴</p>
+                    <button class="card__btn">Купити</button>
+
+
+                    <button class="card__btn card__btn--cart" aria-label="Додати до кошика">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+    </div>
+
+</section>
+
+<section class="about reveal">
+
+    <video autoplay loop muted playsinline class="about__video">
+        <source src="./images/video/1.mp4" type="video/mp4">
+    </video>
+
+    <div class="about__content">
+        <!-- Ліва частина: Текст -->
+        <div class="about__text-block">
+            <h2 class="about__content-title">Хто ми такі?</h2>
+            <p class="about__content-text">
+                Ми — команда однодумців, яка створює унікальні цифрові рішення для вашого бізнесу.
+                Поєднуємо передові технології, агресивний дизайн та бездоганний код, щоб виділити
+                ваш продукт серед конкурентів.
+            </p>
+        </div>
+
+        <!-- Права частина: Цікава сітка з цифрами -->
+        <div class="about__stats-grid">
+            <div class="about__stat-card ">
+                <span class="about__stat-num">5+</span>
+                <span class="about__stat-desc">Років досвіду</span>
+            </div>
+            <div class="about__stat-card">
+                <span class="about__stat-num">150+</span>
+                <span class="about__stat-desc">Готових проєктів</span>
+            </div>
+            <div class="about__stat-card about__stat-card--accent">
+                <span class="about__stat-num">99%</span>
+                <span class="about__stat-desc">Задоволених клієнтів</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<main class="reviews-page reveal">
+    <div class="reviews-container">
+
+        <!-- Заголовок, винесений вгору над контентом -->
+        <h1 class="reviews-page__title">Відгуки клієнтів</h1>
+
+
+        <!-- 2. СІТКА З ВІДГУКАМИ -->
+        <div class="reviews-grid">
+
+            <!-- Картка відгуку 1 -->
+            <article class="review-card reveal">
+                <div class="review-card__header">
+                    <div class="review-card__user">
+                        <div class="review-card__avatar">О</div>
+                        <div>
+                            <h3 class="review-card__name">Олександр В.</h3>
+                            <span class="review-card__date">14.05.2026</span>
+                        </div>
+                    </div>
+                    <div class="review-card__stars">★★★★★</div>
+                </div>
+                <p class="review-card__text">
+                    Замовив торцеву дошку з дуба. Якість просто неймовірна! Важка, солідна,
+                    всі стики ідеально підігнані. Окреме дякую за швидку доставку та круте пакування.
+                    Однозначно рекомендую wood_craft_max!
+                </p>
+            </article>
+
+            <!-- Картка відгуку 2 -->
+            <article class="review-card">
+                <div class="review-card__header">
+                    <div class="review-card__user">
+                        <div class="review-card__avatar review-card__avatar--m">М</div>
+                        <div>
+                            <h3 class="review-card__name">Марія К.</h3>
+                            <span class="review-card__date">08.05.2026</span>
+                        </div>
+                    </div>
+                    <div class="review-card__stars">★★★★★</div>
+                </div>
+                <p class="review-card__text">
+                    Дошка виглядає як витвір мистецтва, навіть шкода спочатку було на ній різати)
+                    Але у використанні супер, ножі справді не так тупляться. Після миття не вигинається.
+                    Буду замовляти ще на подарунок.
+                </p>
+            </article>
+
+            <!-- Картка відгуку 3 -->
+            <article class="review-card">
+                <div class="review-card__header">
+                    <div class="review-card__user">
+                        <div class="review-card__avatar review-card__avatar--d">Д</div>
+                        <div>
+                            <h3 class="review-card__name">Дмитро</h3>
+                            <span class="review-card__date">29.04.2026</span>
+                        </div>
+                    </div>
+                    <div class="review-card__stars">★★★★☆</div>
+                </div>
+                <p class="review-card__text">
+                    Гарний виріб, замовляв з горіха. Малюнок дерева дуже красивий.
+                    Зняв одну зірочку за те, що затримали відправку на один день, але сама дошка
+                    компенсувала це очікування на всі 100%.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</main>
+
+<section class="contact reveal">
+    <div class="contact__content">
+
+        <!-- Ліва частина: Інформація з іконками -->
+        <div class="contact__info-block">
+            <h2 class="contact__title">Зв'яжіться з нами</h2>
+            <p class="contact__description">
+                Залиште заявку або напишіть нам на пошту, і ми відповімо найближчим часом.
+            </p>
+
+            <ul class="contact__list">
+                <li class="contact__item">
+                    <span class="contact__icon">📞</span>
+                    <div>
+                        <span class="contact__item-label">Телефон</span>
+                        <a href="tel:+380000000000" class="contact__link">+38 (000) 000-00-00</a>
+                    </div>
+                </li>
+                <li class="contact__item">
+                    <span class="contact__icon">✉️</span>
+                    <div>
+                        <span class="contact__item-label">Email</span>
+                        <a href="mailto:info@example.com" class="contact__link">info@example.com</a>
+                    </div>
+                </li>
+                <li class="contact__item">
+                    <span class="contact__icon">📍</span>
+                    <div>
+                        <span class="contact__item-label">Адреса</span>
+                        <span class="contact__text">м. Київ, вул. Хрещатик, 1</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <form class="contact__form">
+            <div class="contact__field-wrapper">
+                <input type="text" class="contact__input" placeholder=" " id="name" required>
+                <label class="contact__label" for="name">Ваше ім'я</label>
+            </div>
+
+            <div class="contact__field-wrapper">
+                <input type="email" class="contact__input" placeholder=" " id="email" required>
+                <label class="contact__label" for="email">Ваш Email</label>
+            </div>
+
+            <div class="contact__field-wrapper">
+                <textarea class="contact__textarea" placeholder=" " id="message" required></textarea>
+                <label class="contact__label" for="message">Ваше повідомлення</label>
+            </div>
+
+            <button type="submit" class="contact__button">
+                <span>Надіслати повідомлення</span>
+            </button>
+        </form>
+
+    </div>
+</section>
+
+
+<footer class="footer reveal">
+
+    <img src="images/footer-bg.jpg" alt="" class="footer__img">
+
+
+        <div class="footer__content">
+            <div class="footer__brand">
+                <a href="index.html" class="footer__logo">wood_craft_max</a>
+                <p class="footer__description">
+                    Короткий опис вашої компанії або проєкту для користувачів.
+                </p>
+            </div>
+
+            <nav class="footer__nav">
+                <h4 class="footer__title">Навігація</h4>
+                <ul class="footer__list">
+                    <li class="footer__item"><a href="index.html" class="footer__link">Головна</a></li>
+                    <li class="footer__item"><a href="about.html" class="footer__link">Про нас</a></li>
+                    <li class="footer__item"><a href="#" class="footer__link">Послуги</a></li>
+                    <li class="footer__item"><a href="contact.html" class="footer__link">Контакти</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer__contacts">
+                <h3 class="footer__title">Контакт</h3>
+                <ul class="footer__list">
+                    <li class="footer__item">
+                        <a href="tel:+380000000000" class="footer__link">+38 (000) 000-00-00</a>
+                    </li>
+                    <li class="footer__item">
+                        <a href="mailto:info@example.com" class="footer__link">info@example.com</a>
+                    </li>
+                    <li class="footer__item">м. Київ, вул. Хрещатик, 1</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer__bottom">
+            <p class="footer__copy">&copy; 2026 Усі права захищені.</p>
+            <a href="index.html" class="foter__logo-link"><img src="" alt="" class="footer__logo-img">wood_craft_max</a>
+        </div>
+</footer>
+
+
+<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+/* ==========================================================================
+   ФІРМОВИЙ ФУТЕР З КАРТИНКОЮ НА ФОНІ
+   ========================================================================== */
+.footer {
+    position: relative; /* 👈 КРИТИЧНО: створює систему координат для фону */
+    background-color: #1a1a1a; /* Фоновий колір, поки вантажиться картинка */
+    color: #ffffff;
+    font-family: sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+
+}
+
+/* Стилізація фонової картинки */
+.footer__img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* 👈 Розтягує картинку без спотворення як шпалери */
+    z-index: 1; /* 👈 Ховає на самий задній план */
+    pointer-events: none; /* Забороняє виділяти картинку мишкою */
+}
+
+/* Темне напівпрозоре затемнення поверх картинки, щоб текст добре читався */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 11, 12, 0.85); /* 85% темного шару для ідеального контрасту */
+    z-index: 2; /* 👈 Лягає ПОВЕРХ картинки, але ПІД контент */
+}
+
+/* Верхня частина контенту (виносимо на передній план) */
+.footer__content {
+    position: relative;
+    z-index: 3; /* 👈 Вище за фон (1) та затемнення (2) */
+    max-width: 75rem;
+    margin: 0 auto 40px;
+    padding: 15rem 0;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1.2fr;
+    gap: 50px;
+}
+
+/* Нижня панель футера (виносимо на передній план) */
+.footer__bottom {
+    position: relative;
+    z-index: 3; /* 👈 Вище за фон (1) та затемнення (2) */
+    max-width: 75rem;
+    margin: 0 auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   СТИЛІЗАЦІЯ ЕЛЕМЕНТІВ (Ваші фірмові ховери та градієнти)
+   ========================================================================== */
+.footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.footer__logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: 1px;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.footer__description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.footer__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffffff;
+    position: relative;
+}
+
+.footer__title::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background-color: #ff4500;
+}
+
+.footer__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+}
+
+.footer__link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    color 0.3s ease;
+}
+
+.footer__link:hover {
+    color: #ff4500;
+    transform: translateX(5px); /* Акуратний зсув вбік */
+}
+
+.footer__copy {
+    margin: 0;
+}
+
+.foter__logo-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.foter__logo-link:hover {
+    color: #ff4500;
+}
+
+.footer__logo-img {
+    max-height: 20px;
+    display: block;
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ ДЛЯ ФУТЕРА
+   ========================================================================== */
+@media (max-width: 992px) {
+    .footer { padding: 40px 2rem 20px; }
+    .footer__content { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .footer__brand { grid-column: span 2; }
+}
+
+@media (max-width: 576px) {
+    .footer__content { grid-template-columns: 1fr; gap: 30px; }
+    .footer__brand { grid-column: span 1; }
+    .footer__bottom { flex-direction: column; gap: 15px; text-align: center; }
+}

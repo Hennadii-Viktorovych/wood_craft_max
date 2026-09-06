@@ -1,0 +1,205 @@
+
+/* Початковий стан сторінки: все сховано в глибокий чорний колір */
+body {
+    background-color: #0b0b0c;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out; /* Швидкість появи/гасіння сторінки */
+}
+
+/* Стан після повного завантаження: сторінка плавно проявляється */
+body.page-loaded {
+    opacity: 1;
+}
+
+/* Спеціальний фікс для зацикленої анімації: */
+/* Якщо користувач швидко гортає вгору, ми робимо зникнення трохи швидшим, ніж появу */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    will-change: opacity, transform;
+}
+
+.reveal--visible {
+    opacity: 1;
+    transform: translateY(0);
+    /* Для появи залишаємо наш гарний преміальний кубічний ефект */
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ==========================================================================
+   ФІРМОВИЙ ПРЕЛОАДЕР (WOOD_CRAFT_MAX)
+   ========================================================================== */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #0b0b0c; /* Повна темрява при старті */
+    z-index: 9999; /* Поверх абсолютно всього, навіть фіксованого хедера */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 8s cubic-bezier(0.77, 0, 0.175, 1),
+    opacity 0.6s ease-in-out;
+}
+
+/* Стан для приховування за допомогою JS */
+.preloader--hidden {
+    opacity: 0;
+    pointer-events: none; /* Дозволяє клікати на елементи сайту після зникнення */
+    transform: scale(1.05); /* Легке збільшення вглиб під час зникнення */
+}
+
+.preloader__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Анімований неоновий логотип */
+.preloader__logo {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-family: sans-serif;
+    color: #ffffff;
+    margin: 0;
+
+    /* Вогняне світіння навколо букв */
+    text-shadow: 0 0 10px rgba(255, 69, 0, 0.5),
+    0 0 20px rgba(255, 69, 0, 0.3),
+    0 0 40px rgba(255, 117, 0, 0.2);
+
+    /* Анімація дихання/мерехтіння вогню */
+    animation: firePulse 2s infinite ease-in-out;
+}
+
+/* Лінія прогресу під логотипом */
+.preloader__line {
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff4500, #ff7500, transparent);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+/* Анімація бігу світла по лінії */
+.preloader__line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    animation: loadingScan 1.5s infinite linear;
+}
+
+/* КІНЕМА-АНІМАЦІЇ */
+@keyframes firePulse {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 69, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.4);
+        opacity: 0.9;
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 69, 0, 0.9), 0 0 40px rgba(255, 117, 0, 0.6), 0 0 60px rgba(255, 69, 0, 0.3);
+        opacity: 1;
+        transform: scale(1.02); /* Логотип злегка пульсує в такт */
+    }
+}
+
+@keyframes loadingScan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+
+.hero {
+    width: 100%;
+    height: 100vh; /* Займає чітко 100% висоти видимого екрана */
+    min-height: 500px; /* Мінімальна висота, щоб контент не злипався на дуже маленьких екранах */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    background-color: #0b0b0c; /* Чорна заглушка, щоб навіть під час завантаження не було білого фону */
+}
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* 👈 Головне: змушує відео обрізатися та розтягуватися як фото-шпалери, заповнюючи весь блок без білих щілин */
+    z-index: 1;
+}
+
+
+.hero__content {
+    /* Робимо контент абсолютним та розтягуємо на весь hero */
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: 50rem;
+    color: #ffffff;
+    z-index: 10;
+    padding: 15rem 10rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Базовий клас для всіх кнопок (ваш код із правками) */
+.btn {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600; /* Зробимо текст трохи жирнішим для читабельності */
+    padding: 1rem 2rem; /* Зменшив горизонтальний padding з 6rem до 4rem, щоб кнопка не була гігантською */
+    border-radius: 8px;
+    border: 1px solid transparent;
+    text-transform: uppercase; /* Додасть преміального вигляду в стилі каталогу */
+    letter-spacing: 1px;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+/* Модифікатор СПЕЦІАЛЬНО для головної кнопки в Hero */
+.btn--hero {
+    /* Яскравий вогняний градієнт, який чітко видно поверх будь-якого відео */
+    background: linear-gradient(135deg, #ff4500, #ff6a00);
+    color: #ffffff;
+    /* Початкове м'яке неонове світіння кнопки */
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+}
+
+/* Ефект наведення саме для Hero-кнопки */
+.btn--hero:hover {
+    transform: translateY(-5px); /* Кнопка красиво підстрибує вгору */
+    color: #000; /* Текст залишається білим і чітким */
+    background: linear-gradient(135deg, #ff5511, #ff7b11); /* Трохи світлішає */
+
+    /* Потужне неонове вибухове світіння навколо кнопки */
+    box-shadow: 0 12px 25px rgba(255, 69, 0, 0.5),
+    0 0 15px rgba(255, 69, 0, 0.3);
+}
+
+/* Ефект при фізичному кліку (кнопка ніби продавлюється назад) */
+.btn--hero:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(255, 69, 0, 0.4);
+}
+

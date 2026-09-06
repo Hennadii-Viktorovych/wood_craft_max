@@ -1,0 +1,192 @@
+/* Базовий контейнер секції */
+.contact {
+    width: 100%;
+    background-color: #0b0b0c; /* Глибокий благородний чорний замість брудного сірого */
+    padding: 100px 4rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+}
+
+.contact__content {
+    width: 100%;
+    max-width: 75rem;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+/* --- ЛІВА КОЛОНКА --- */
+.contact__info-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact__title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contact__description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 40px 0;
+}
+
+.contact__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.contact__item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact__icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 69, 0, 0.05);
+    border: 1px solid rgba(255, 69, 0, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.contact__item-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 4px;
+}
+
+.contact__link, .contact__text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact__link:hover {
+    color: #ff4500;
+}
+
+/* --- ПРАВА КОЛОНКА (ФОРМА) --- */
+.contact__form {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+/* Ефектна плаваюча мітка (Floating Label) */
+.contact__field-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.contact__input,
+.contact__textarea {
+    width: 100%;
+    padding: 16px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.contact__textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Статична підказка, яка буде літати */
+.contact__label {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Магія літаючих підказок при фокусі та коли поле не порожнє */
+.contact__input:focus ~ .contact__label,
+.contact__input:not(:placeholder-shown) ~ .contact__label,
+.contact__textarea:focus ~ .contact__label,
+.contact__textarea:not(:placeholder-shown) ~ .contact__label {
+    top: -10px;
+    font-size: 0.8rem;
+    color: #ff4500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Активна лінія при кліку */
+.contact__input:focus,
+.contact__textarea:focus {
+    border-color: #ff4500;
+}
+
+/* Соковита технологічна кнопка */
+.contact__button {
+    margin-top: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #ff4500, #ff6a00);
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255, 69, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+
+.contact__button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.5),
+    0 0 15px rgba(255, 69, 0, 0.2);
+}
+
+.contact__button:active {
+    transform: translateY(-1px);
+}
+
+/* Адаптивність */
+@media (max-width: 992px) {
+    .contact { padding: 60px 2rem; }
+    .contact__content { grid-template-columns: 1fr; gap: 50px; }
+    .contact__title { font-size: 2.2rem; }
+}

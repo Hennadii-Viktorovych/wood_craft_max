@@ -1,0 +1,157 @@
+/* ==========================================================================
+   СТОРІНКА ПОСЛУГ
+   ========================================================================== */
+.services-page {
+    background-color: #0b0b0c; /* Преміальний глибокий темний фон */
+    color: #ffffff;
+    padding: 4rem 0;
+    min-height: 100vh;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.services-container {
+    width: 100%;
+    max-width: 75rem;
+    padding: 0 2rem;
+    margin-top: 6rem; /* Відступ під фіксований хедер */
+}
+
+/* Фірмовий градієнтний заголовок сторінки */
+.services-page__title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 4rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #ff4500, #ff7500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Адаптивна сітка послуг (автоматично б'ється на колонки залежно від екрана) */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* Картка послуги із фірмовим неоновим ховером */
+.service-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    border-color 0.4s ease;
+}
+
+/* Ховер ефект картки послуги */
+.service-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 69, 0, 0.4);
+    box-shadow: 0 15px 35px rgba(255, 69, 0, 0.12),
+    0 0 1px rgba(255, 69, 0, 0.4);
+}
+
+/* Контейнер для SVG іконки */
+.service-card__icon-box {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 69, 0, 0.04);
+    border: 1px solid rgba(255, 69, 0, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff4500; /* Вогняний колір для іконок */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Іконка злегка крутиться або збільшується при ховері на картку */
+.service-card:hover .service-card__icon-box {
+    transform: scale(1.05) rotate(5deg);
+    background-color: rgba(255, 69, 0, 0.08);
+}
+
+.service-card__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.service-card__text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5); /* Приглушений білий */
+    margin: 0;
+    flex: 1; /* Змушує футер картки завжди бути притиснутим до низу */
+}
+
+/* Нижня частина картки (ціна + кнопка) */
+.service-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 20px;
+}
+
+.service-card__price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Кнопка "Замовити" з фірмовим ховером */
+.service-card__btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #ff4500, #ff6a00);
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4);
+}
+
+.service-card__btn:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   АДАПТИВНІСТЬ ДЛЯ СТОРІНКИ ПОСЛУГ
+   ========================================================================== */
+@media (max-width: 768px) {
+    .services-grid {
+        grid-template-columns: 1fr; /* На смартфонах картки вишикуються в один стовпчик */
+    }
+    .services-page__title {
+        font-size: 2rem;
+    }
+}
+@media (max-width: 576px) {
+    .services-container {
+        padding: 0 1.5rem;
+    }
+    .service-card {
+        padding: 20px;
+    }
+}

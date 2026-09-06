@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="css/footer.css">
+</head>
+<body>
+
+<header class="header">
+    <a href="index.html" class="header__logo-link"><img src="" alt="" class="header__logo-img">wood_craft_max</a>
+
+    <nav class="header__nav">
+        <ul class="header__nav-list">
+            <li class="header__nav-item"><a href="index.html" class="header__nav-link">Головна</a></li>
+            <li class="header__nav-item"><a href="catalog.html" class="header__nav-link">Каталог</a></li>
+            <li class="header__nav-item"><a href="about.html" class="header__nav-link">Про нас</a></li>
+            <li class="header__nav-item"><a href="reviews.html" class="header__nav-link">Відгуки</a></li>
+            <li class="header__nav-item"><a href="contact.html" class="header__nav-link">Контакти</a></li>
+        </ul>
+    </nav>
+
+    <div class="header__cart">
+        <h2>Кошик</h2>
+        <div id="cart-items"></div>
+        <p>Разом: <span id="total-price">0</span> грн</p>
+        <button id="clear-cart">Очистити кошик</button>
+    </div>
+</header>
+
+<!-- Головний контейнер сторінки товару -->
+<main class="product-page">
+    <div class="product-container">
+
+        <!-- Двоколонкова структура -->
+        <div class="product-single">
+
+            <!-- ЛІВА КОЛОНКА: Галерея зображень -->
+            <div class="product-gallery">
+                <div class="product-gallery__main">
+                    <!-- Велике головне фото -->
+                    <div class="product-gallery__main-placeholder">Головне фото дошки</div>
+                </div>
+
+                <!-- Додаткові міні-фото (прев'ю) -->
+                <div class="product-gallery__thumbs">
+                    <div class="product-gallery__thumb product-gallery__thumb--active">Прев'ю 1</div>
+                    <div class="product-gallery__thumb">Прев'ю 2</div>
+                    <div class="product-gallery__thumb">Прев'ю 3</div>
+                </div>
+            </div>
+
+            <!-- ПРАВА КОЛОНКА: Інформація про товар -->
+            <div class="product-info">
+                <h1 class="product-info__title">Кухонна дошка "Wood Craft Max"</h1>
+
+                <!-- Ціновий блок та статус наявності -->
+                <div class="product-info__meta">
+                    <span class="product-info__price">1 200 ₴</span>
+                    <span class="product-info__status">В наявності</span>
+                </div>
+
+                <hr class="product-info__divider">
+
+                <!-- Коротка технічна характеристика (наприклад, вибір дерева чи розміру) -->
+                <div class="product-options">
+                    <div class="product-options__item">
+                        <span class="product-options__label">Матеріал:</span>
+                        <div class="product-options__select-wrapper">
+                            <select class="product-options__select">
+                                <option value="oak">Дуб преміум</option>
+                                <option value="walnut">Горіх темний</option>
+                                <option value="ash">Ясен світлий</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Керування кількістю та покупка -->
+                <div class="product-purchase">
+                    <!-- Інтерактивний лічильник -->
+                    <div class="product-qty">
+                        <button class="product-qty__btn product-qty__btn--minus" type="button">−</button>
+                        <input class="product-qty__input" type="number" value="1" min="1" max="99">
+                        <button class="product-qty__btn product-qty__btn--plus" type="button">+</button>
+                    </div>
+
+                    <!-- Головні кнопки дії -->
+                    <div class="product-actions">
+                        <button class="product-actions__btn product-actions__btn--buy">Купити в 1 клік</button>
+                        <button class="product-actions__btn product-actions__btn--cart" aria-label="Додати до кошика">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <span>В кошик</span>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="product-info__divider">
+
+                <!-- Детальний опис товару -->
+                <div class="product-description">
+                    <h3 class="product-description__title">Опис моделі</h3>
+                    <p class="product-description__text">
+                        Професійна торцева обробна дошка "Wood Craft Max" виготовлена з добірного дуба.
+                        Завдяки вертикальному розташуванню волокон деревини, ваші ножі залишатимуться
+                        гострими значно довше. Дошка оброблена екологічною сумішшю мінеральної оливи
+                        та бджолиного воску для максимального захисту від вологи та бактерій.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer__content">
+        <div class="footer__brand">
+            <a href="index.html" class="footer__logo">wood_craft_max</a>
+            <p class="footer__description">
+                Короткий опис вашої компанії або проєкту для користувачів.
+            </p>
+        </div>
+
+        <nav class="footer__nav">
+            <h4 class="footer__title">Навігація</h4>
+            <ul class="footer__list">
+                <li class="footer__item"><a href="index.html" class="footer__link">Головна</a></li>
+                <li class="footer__item"><a href="about.html" class="footer__link">Про нас</a></li>
+                <li class="footer__item"><a href="#" class="footer__link">Послуги</a></li>
+                <li class="footer__item"><a href="contact.html" class="footer__link">Контакти</a></li>
+            </ul>
+        </nav>
+
+        <div class="footer__contacts">
+            <h4 class="footer__title">Контакти</h4>
+            <ul class="footer__list">
+                <li class="footer__item">
+                    <a href="tel:+380000000000" class="footer__link">+38 (000) 000-00-00</a>
+                </li>
+                <li class="footer__item">
+                    <a href="mailto:info@example.com" class="footer__link">info@example.com</a>
+                </li>
+                <li class="footer__item">м. Київ, вул. Хрещатик, 1</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 Усі права захищені.</p>
+        <a href="index.html" class="foter__logo-link"><img src="" alt="" class="footer__logo-img">wood_craft_max</a>
+    </div>
+</footer>
+
+
+<script src="js/product.js"></script>
+</body>
+</html>
