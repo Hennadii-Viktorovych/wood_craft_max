@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
 
 // ── НАЛАШТУВАННЯ ─────────────────────────────────────
 define('ADMIN_PASSWORD', 'woodcraft2024');        // ← ЗМІНИТИ!
-define('PRODUCTS_FILE',  __DIR__ . '/../json/products.json');
+define('PRODUCTS_FILE',  __DIR__ . '/../json/product.json');
 define('ORDERS_FILE',    __DIR__ . '/../json/orders.json');
 define('IMAGES_DIR',     __DIR__ . '/../images/products/'); // папка для завантажених фото
 define('IMAGES_URL',     './images/products/');             // публічний шлях

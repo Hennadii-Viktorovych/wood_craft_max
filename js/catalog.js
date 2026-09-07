@@ -1,7 +1,6 @@
 /**
  * js/catalog.js — WoodCraft UA
- * Для index.html і catalog.html
- * Підключати після cart.js
+ * Для index.html і catalog.html — підключати після cart.js
  */
 
 let allProducts = [];
@@ -9,10 +8,10 @@ let allProducts = [];
 document.addEventListener('DOMContentLoaded', () => {
     cartBuildDrawer();
     loadProducts();
-    initStaticCards(); // одразу ініціалізуємо статичні картки
+    initStaticCards(); // одразу щоб картки працювали без PHP
 });
 
-// ── ЗАВАНТАЖЕННЯ ТОВАРІВ З PHP ────────────────────────
+// ── ЗАВАНТАЖЕННЯ З PHP ────────────────────────────────
 async function loadProducts() {
     try {
         const res  = await fetch(API + '?action=get_products');
@@ -21,11 +20,11 @@ async function loadProducts() {
         allProducts = data.products;
         renderCatalog(allProducts);
     } catch {
-        // PHP не запущений — статичні картки вже ініціалізовані
+        // PHP недоступний — статичні картки вже ініціалізовані
     }
 }
 
-// ── РЕНДЕР ДИНАМІЧНОГО КАТАЛОГУ ───────────────────────
+// ── РЕНДЕР КАТАЛОГУ ───────────────────────────────────
 function renderCatalog(products) {
     const grid = document.querySelector('.catalog__grid');
     if (!grid) return;
@@ -35,9 +34,10 @@ function renderCatalog(products) {
     grid.innerHTML = inStock.map(p => {
         const img = (p.images || [])[0] || p.image || '';
         return `
-            <div class="catalog__card" style="cursor:pointer">
-                <div class="card__img-placeholder" style="background-image:url('${escAttr(img)}');background-size:cover;background-position:center">
-                    ${!img ? p.name : ''}
+            <div class="catalog__card" data-id="${p.id}" style="cursor:pointer">
+                <div class="card__img-placeholder"
+                     style="${img ? `background:url('${escAttr(img)}') center/cover no-repeat` : ''}">
+                    ${!img ? '<span style="color:#aaa;font-size:13px">Фото товару</span>' : ''}
                 </div>
                 <div class="card__info">
                     <h3 class="card__title">${escHtml(p.name)}</h3>
@@ -48,9 +48,11 @@ function renderCatalog(products) {
                     </button>
                     <button class="card__btn card__btn--cart"
                         aria-label="Додати до кошика"
-                        onclick="event.stopPropagation(); addProductToCart('${p.id}')">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        onclick="event.stopPropagation(); addDynToCart('${p.id}')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                         </svg>
                     </button>
@@ -59,38 +61,31 @@ function renderCatalog(products) {
         `;
     }).join('');
 
-    // Клік по картці → сторінка товару
-    grid.querySelectorAll('.catalog__card').forEach((card, i) => {
-        card.addEventListener('click', () => goToProduct(inStock[i].id));
+    // Клік по картці → product.html
+    grid.querySelectorAll('.catalog__card[data-id]').forEach(card => {
+        card.addEventListener('click', () => goToProduct(card.dataset.id));
     });
 }
 
-// ── СТАТИЧНІ КАРТКИ (без PHP) ─────────────────────────
+// ── СТАТИЧНІ КАРТКИ ───────────────────────────────────
 function initStaticCards() {
     document.querySelectorAll('.catalog__card').forEach(card => {
-        // Кнопка "Купити" → перехід на product.html (якщо є data-id)
         const id = card.dataset.id;
 
         // Кнопка кошика
-        const cartBtn = card.querySelector('.card__btn--cart');
-        if (cartBtn) {
-            cartBtn.addEventListener('click', e => {
-                e.stopPropagation();
-                addStaticToCart(card);
-            });
-        }
+        card.querySelector('.card__btn--cart')?.addEventListener('click', e => {
+            e.stopPropagation();
+            addStaticToCart(card);
+        });
 
-        // Кнопка "Купити" або клік по картці
-        const buyBtn = card.querySelector('.card__btn:not(.card__btn--cart)');
-        if (buyBtn) {
-            buyBtn.addEventListener('click', e => {
-                e.stopPropagation();
-                if (id) goToProduct(id);
-                else addStaticToCart(card);
-            });
-        }
+        // Кнопка "Купити"
+        card.querySelector('.card__btn:not(.card__btn--cart)')?.addEventListener('click', e => {
+            e.stopPropagation();
+            if (id) goToProduct(id);
+            else addStaticToCart(card);
+        });
 
-        // Клік по картці → product.html
+        // Клік по картці
         if (id) {
             card.style.cursor = 'pointer';
             card.addEventListener('click', () => goToProduct(id));
@@ -98,8 +93,8 @@ function initStaticCards() {
     });
 }
 
-// ── ДОДАТИ З ДИНАМІЧНОГО КАТАЛОГУ ────────────────────
-function addProductToCart(id) {
+// ── ДОДАТИ В КОШИК ────────────────────────────────────
+function addDynToCart(id) {
     const p = allProducts.find(x => x.id === id);
     if (!p) return;
     cartAdd({
@@ -110,20 +105,16 @@ function addProductToCart(id) {
     });
 }
 
-// ── ДОДАТИ ZI СТАТИЧНОЇ КАРТКИ ────────────────────────
 function addStaticToCart(card) {
     const name  = card.querySelector('.card__title')?.textContent?.trim() || 'Товар';
     const price = parseFloat(
-        (card.querySelector('.card__price')?.textContent || '0').replace(/[^\d.]/g, '')
+        (card.querySelector('.card__price')?.textContent || '0').replace(/[^\d.]/g,'')
     ) || 0;
-    const imgEl = card.querySelector('img, .card__img-placeholder');
-    const image = imgEl?.tagName === 'IMG' ? imgEl.src : '';
-    const id    = card.dataset.id || 'static_' + name.replace(/\s+/g, '_').slice(0, 20);
-
-    cartAdd({ id, name, price, image });
+    const img   = card.querySelector('img');
+    const id    = card.dataset.id || 'static_' + name.replace(/\s+/g,'_').slice(0,20);
+    cartAdd({ id, name, price, image: img?.src || '' });
 }
 
-// ── ПЕРЕХІД НА СТОРІНКУ ТОВАРУ ────────────────────────
 function goToProduct(id) {
     window.location.href = 'product.html?id=' + id;
 }
