@@ -141,26 +141,36 @@ body.page-loaded {
     transform: translate(-50%, -50%);
     object-fit: cover; /* 👈 Головне: змушує відео обрізатися та розтягуватися як фото-шпалери, заповнюючи весь блок без білих щілин */
     z-index: 1;
+    filter: brightness(0.6) !important;
 }
 
 
 .hero__content {
-    /* Робимо контент абсолютним та розтягуємо на весь hero */
     position: absolute;
     top: 0;
     left: 0;
-    max-width: 50rem;
+    max-width: 83rem;
     color: #ffffff;
     z-index: 10;
-    padding: 15rem 10rem;
-    gap: 1rem;
+    padding: 10rem 10rem ;
+    gap: 1.3rem;
     display: flex;
     flex-direction: column;
+}
+
+.hero__title{
+    font-size: 4vw;
+    font-weight: 500;
+}
+
+.hero__text{
+    font-size: clamp(1.5rem, 0.5vw + 1rem, 3rem);
 }
 
 
 /* Базовий клас для всіх кнопок (ваш код із правками) */
 .btn {
+    max-width: 30rem;
     color: white;
     font-size: 1.1rem;
     font-weight: 600; /* Зробимо текст трохи жирнішим для читабельності */
