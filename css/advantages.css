@@ -1,0 +1,176 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.page-hero {
+    padding: 100px 0 60px;
+    text-align: center;
+    background: radial-gradient(circle at top center, rgba(255,87,34,0.1) 0%, transparent 70%);
+}
+
+.page-hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.page-hero p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Advantages Section */
+.advantages-section {
+    padding: 60px 0 100px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header .subtitle {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.section-header .title {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+.section-header .description {
+    color: var(--text-muted);
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.adv-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 32px 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.adv-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 87, 34, 0.4);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.adv-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 87, 34, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.adv-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.adv-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Comparison Table Block */
+.comparison-section {
+    padding: 60px 0 100px;
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+th {
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+td.highlight {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* CTA Section */
+.cta-banner {
+    background: linear-gradient(135deg, rgba(255,87,34,0.15) 0%, rgba(20,20,22,1) 100%);
+    border: 1px solid rgba(255, 87, 34, 0.3);
+    border-radius: 16px;
+    padding: 50px 30px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.cta-banner h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.cta-banner p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--accent);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
