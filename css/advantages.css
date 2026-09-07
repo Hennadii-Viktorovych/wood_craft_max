@@ -1,176 +1,223 @@
+/* Основні стилі під дизайн вашого сайту */
+:root {
+    --bg-dark: #121212;
+    --card-bg: #1e1e1e;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --accent-orange: #ff5500;
+    --accent-orange-hover: #e04b00;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --text-dim: #666666;
+}
+
+
+
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Hero Section */
-.page-hero {
-    padding: 100px 0 60px;
-    text-align: center;
-    background: radial-gradient(circle at top center, rgba(255,87,34,0.1) 0%, transparent 70%);
-}
-
-.page-hero h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    line-height: 1.2;
-}
-
-.page-hero p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    max-width: 600px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-/* Advantages Section */
-.advantages-section {
-    padding: 60px 0 100px;
-}
-
+/* Заголовки */
 .section-header {
     text-align: center;
     margin-bottom: 50px;
 }
 
-.section-header .subtitle {
-    color: var(--accent);
-    font-size: 0.85rem;
+.section-subtitle {
+    color: var(--accent-orange);
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
-.section-header .title {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
 }
 
-.section-header .description {
+.section-desc {
     color: var(--text-muted);
-    max-width: 550px;
+    font-size: 15px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
-.advantages-grid {
+/* 1. СЕТКА ПЕРЕВАГ */
+.features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 24px;
+    margin-bottom: 90px;
 }
 
-.adv-card {
-    background: var(--card-bg);
+.feature-card {
+    background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    backdrop-filter: blur(10px);
     border-radius: 12px;
-    padding: 32px 24px;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    padding: 28px 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.adv-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(255, 87, 34, 0.4);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 85, 0, 0.4);
 }
 
-.adv-icon {
-    width: 56px;
-    height: 56px;
-    background: rgba(255, 87, 34, 0.1);
-    border-radius: 10px;
+.feature-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 85, 0, 0.1);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent);
     margin-bottom: 20px;
+    color: var(--accent-orange);
 }
 
-.adv-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 12px;
+.feature-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.feature-title {
+    font-size: 18px;
     font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-main);
 }
 
-.adv-card p {
+.feature-text {
+    font-size: 14px;
     color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.5;
 }
 
-/* Comparison Table Block */
-.comparison-section {
-    padding: 60px 0 100px;
-    background: rgba(255, 255, 255, 0.01);
-}
-
-.table-wrapper {
+/* 2. ТАБЛИЦЯ ПОРІВНЯННЯ */
+.comparison-wrapper {
+    margin-bottom: 90px;
     overflow-x: auto;
-    margin-top: 40px;
 }
 
-table {
+.comparison-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
+    font-size: 14px;
 }
 
-th, td {
-    padding: 18px 20px;
+.comparison-table th,
+.comparison-table td {
+    padding: 16px 20px;
     border-bottom: 1px solid var(--card-border);
 }
 
-th {
+.comparison-table th {
     color: var(--text-muted);
-    font-weight: 600;
+    font-size: 12px;
     text-transform: uppercase;
-    font-size: 0.85rem;
     letter-spacing: 1px;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.02);
 }
 
-td.highlight {
-    color: var(--accent);
+.comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Виділення колонки "Наше дерево" */
+.comparison-table .highlight-col {
+    background-color: rgba(255, 85, 0, 0.05);
+    color: #ffffff;
     font-weight: 600;
 }
 
-/* CTA Section */
-.cta-banner {
-    background: linear-gradient(135deg, rgba(255,87,34,0.15) 0%, rgba(20,20,22,1) 100%);
-    border: 1px solid rgba(255, 87, 34, 0.3);
+.comparison-table th.highlight-col {
+    color: var(--accent-orange);
+    border-top: 2px solid var(--accent-orange);
+    background-color: rgba(255, 85, 0, 0.1);
+}
+
+.comparison-table td:first-child {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.comparison-table td {
+    color: var(--text-muted);
+}
+
+/* 3. БЛОК ЗАКЛИКУ ДО ДІЇ (CTA) */
+.cta-card {
+    background: linear-gradient(135deg, #1e1e1e 0%, #282828 100%);
+    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 50px 30px;
     text-align: center;
-    margin-bottom: 100px;
+    position: relative;
+    overflow: hidden;
 }
 
-.cta-banner h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
+.cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-orange), transparent);
 }
 
-.cta-banner p {
+.cta-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.cta-desc {
     color: var(--text-muted);
-    margin-bottom: 30px;
+    font-size: 15px;
+    margin-bottom: 28px;
 }
 
-.btn-primary {
+.btn-orange {
     display: inline-block;
-    background-color: var(--accent);
-    color: #fff;
+    background-color: var(--accent-orange);
+    color: #ffffff;
     padding: 14px 32px;
     border-radius: 6px;
-    text-decoration: none;
     font-weight: 600;
+    text-decoration: none;
     text-transform: uppercase;
-    font-size: 0.9rem;
+    font-size: 13px;
     letter-spacing: 1px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.btn-primary:hover {
-    background-color: var(--accent-hover);
+.btn-orange:hover {
+    background-color: var(--accent-orange-hover);
+    transform: translateY(-2px);
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .section-title { font-size: 24px; }
+    .cta-title { font-size: 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+
+    .comparison-table th, .comparison-table td {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
 }
