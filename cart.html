@@ -9,20 +9,15 @@
 </head>
 <body>
 
-
-<!-- Головний контейнер сторінки кошика -->
 <main class="cart-page">
     <div class="cart-page-container">
 
-        <!-- Заголовок, винесений вгору над контентом -->
         <h1 class="cart-page__title">Ваш кошик</h1>
 
         <div class="cart-page__content">
 
-            <!-- ЛІВА КОЛОНКА: Список товарів -->
             <section class="cart-items">
 
-                <!-- Товар 1 -->
                 <article class="cart-item">
                     <div class="cart-item__img-placeholder">Фото</div>
 
@@ -31,7 +26,6 @@
                         <p class="cart-item__meta">Матеріал: Дуб преміум</p>
                     </div>
 
-                    <!-- Керування кількістю -->
                     <div class="cart-item__qty">
                         <button class="cart-item__qty-btn cart-item__qty-btn--minus">−</button>
                         <input class="cart-item__qty-input" type="number" value="1" min="1" max="99">
@@ -42,7 +36,6 @@
                         <span class="cart-item__price">1 200 ₴</span>
                     </div>
 
-                    <!-- Кнопка видалення (хрестик) -->
                     <button class="cart-item__remove" aria-label="Видалити товар">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -51,7 +44,6 @@
                     </button>
                 </article>
 
-                <!-- Товар 2 -->
                 <article class="cart-item">
                     <div class="cart-item__img-placeholder">Фото</div>
 
@@ -60,7 +52,6 @@
                         <p class="cart-item__meta">Матеріал: Горіх темний</p>
                     </div>
 
-                    <!-- Керування кількістю -->
                     <div class="cart-item__qty">
                         <button class="cart-item__qty-btn cart-item__qty-btn--minus">−</button>
                         <input class="cart-item__qty-input" type="number" value="2" min="1" max="99">
@@ -81,7 +72,6 @@
 
             </section>
 
-            <!-- ПРАВА КОЛОНКА: Підсумок (Чек) -->
             <aside class="cart-summary">
                 <h2 class="cart-summary__title">Підсумок</h2>
 
@@ -113,6 +103,8 @@
     </div>
 </main>
 
-
+<script src="js/cart.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/index.js"></script>
 </body>
 </html>
