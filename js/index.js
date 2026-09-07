@@ -83,3 +83,52 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const slides = [
+        {
+            title: "Кулінарія це мистецтво. Наші дошки його полотно.",
+            text: "Забудьте про бездушний пластик. Ми створюємо унікальні дерев'яні витвори, які живуть на кухні роками, збирають навколо себе найрідніших і зберігають історії ваших найкращих вечорів.",
+            btnText: "Дізнатись більше",
+            btnLink: "catalog.html"
+        },
+        {
+            title: "Дошки з характером. Для тих, хто готує з пристрастю.",
+            text: "Ручна робота з живого масиву дерева, що перетворює щоденну рутину на ресторанну естетику. Відчуйте тепло натурального ремесла у кожному дотику.",
+            btnText: "Переглянути каталог",
+            btnLink: "catalog.html"
+        },
+        {
+            title: "Створюйте моменти, які хочеться смакувати.",
+            text: "Авторські дошки для подачі та нарізки, з якими навіть звичайна сирна тарілка виглядає як шедевр. Унікальний природний візерунок у кожному виробі.",
+            btnText: "Обрати свою дошку",
+            btnLink: "catalog.html"
+        }
+    ];
+
+    let currentIndex = 0;
+
+    const heroContent = document.querySelector('.hero__content');
+    const heroTitle = document.querySelector('.hero__title');
+    const heroText = document.querySelector('.hero__text');
+    const heroBtn = document.querySelector('.btn--hero');
+
+    if (!heroContent || !heroTitle || !heroText || !heroBtn) return;
+
+    function changeSlide() {
+        heroContent.classList.add('hero__content--fade');
+
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+
+            heroTitle.textContent = slides[currentIndex].title;
+            heroText.textContent = slides[currentIndex].text;
+            heroBtn.textContent = slides[currentIndex].btnText;
+            heroBtn.setAttribute('href', slides[currentIndex].btnLink);
+
+            heroContent.classList.remove('hero__content--fade');
+        }, 800); // 800 мс — відповідає тривалості transition у CSS
+    }
+
+    // 9000 мс = 9 секунд експозиції для комфортного читання
+    setInterval(changeSlide, 9000);
+});

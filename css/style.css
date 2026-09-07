@@ -156,7 +156,22 @@ body.page-loaded {
     gap: 1.3rem;
     display: flex;
     flex-direction: column;
+    /* Додаємо кубічний безьє для вишуканої плавності та ефект blur */
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
 }
+
+/* Стан при зміні: текст м'яко розмивається, зсувається та зникає */
+.hero__content--fade {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+    filter: blur(8px);
+}
+
 
 .hero__title{
     font-size: 4vw;
