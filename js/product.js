@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         thumbsContainer.innerHTML = '';
     }
 
-    // 6. Додавання в кошик без примусового редіректу (підтримка бічної панелі)
+    // 6. Додавання в кошик із викликом виїзної панелі
     const qtyInput = document.querySelector('.product-qty__input');
     const minusBtn = document.querySelector('.product-qty__btn--minus');
     const plusBtn = document.querySelector('.product-qty__btn--plus');
@@ -193,17 +193,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Якщо на сторінці підключено функцію рендерингу/відкриття бічної панелі кошика — викликаємо її
-            if (typeof window.openCartSidebar === 'function') {
-                window.openCartSidebar();
-            } else if (typeof window.renderCart === 'function') {
-                window.renderCart();
-            } else {
-                alert('Товар успішно додано до кошика!');
-            }
+            // Відкриваємо виїзну панель та оновлюємо кошик
+            openCartDrawer();
         };
     }
 });
+
+// Глобальні функції для управління виїзною панеллю кошика
+window.openCartDrawer = function() {
+    const cartEl = document.querySelector('.header__cart');
+    const overlay = document.getElementById('cart-overlay');
+    if (cartEl) cartEl.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    if (typeof renderCart === 'function') renderCart();
+}
+
+window.closeCartDrawer = function() {
+    const cartEl = document.querySelector('.header__cart');
+    const overlay = document.getElementById('cart-overlay');
+    if (cartEl) cartEl.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+}
 
 function changeMainImage(src, el) {
     const mainImg = document.getElementById('main-product-img');
