@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let products = [];
 
-    // 1. Пробуємо отримати дані через admin.php (піднімаємося з папки js в корінь через ../)
+    // 1. Пробуємо отримати дані через admin.php (якщо працює PHP-сервер)
     const adminPaths = [
         '../admin/admin.php?action=get_products',
         './admin/admin.php?action=get_products',
@@ -19,14 +19,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const res = await fetch(path);
             if (res.ok) {
                 const data = await res.json();
-                if (Array.isArray(data)) products = data;
-                else if (data.products && Array.isArray(data.products)) products = data.products;
+                if (data && typeof data === 'object' && !Array.isArray(data)) {
+                    products = Object.values(data);
+                } else if (Array.isArray(data)) {
+                    products = data;
+                } else if (data.products && Array.isArray(data.products)) {
+                    products = data.products;
+                }
                 if (products.length > 0) break;
             }
         } catch (e) {}
     }
 
-    // 2. Якщо через адмінку не вийшло, читаємо напряму з json/product.json
+    // 2. Якщо через адмінку не вийшло (GitHub Pages), читаємо напряму з json/product.json
     if (products.length === 0) {
         const jsonPaths = [
             '../json/product.json',
@@ -39,9 +44,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const res = await fetch(path);
                 if (res.ok) {
                     const data = await res.json();
-                    if (Array.isArray(data)) products = data;
-                    else if (data.products && Array.isArray(data.products)) products = data.products;
-                    else if (data.data && Array.isArray(data.data)) products = data.data;
+
+                    // Обробка об'єкта з ключами на кшталт "prod_001": {...}
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        products = Object.values(data);
+                    } else if (Array.isArray(data)) {
+                        products = data;
+                    } else if (data.products && Array.isArray(data.products)) {
+                        products = data.products;
+                    } else if (data.data && Array.isArray(data.data)) {
+                        products = data.data;
+                    }
 
                     if (products.length > 0) break;
                 }
@@ -104,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // 5. Зображення
+    // 5. Зображення (виправлені шляхи для коректного відображення)
     let images = [];
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
         images = product.images;
@@ -116,9 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     images = images.map(img => {
         if (img.startsWith('http')) return img;
-        // З огляду на те, що product.html лежить у корені, а картинки у images/
-        if (img.startsWith('../')) return img;
-        return img.startsWith('./') ? img : './' + img.replace(/^\//, '');
+        return img.replace(/^\.\//, '').replace(/^\//, '');
     });
 
     const mainPlaceholder = document.getElementById('gallery-placeholder');
@@ -142,7 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         thumbsContainer.innerHTML = '';
     }
 
-    // 6. Кошик (Зберігання та перехід на сторінку cart.html)
+    // 6. Кошик (Зберігання та універсальний перехід на cart.html)
     const qtyInput = document.querySelector('.product-qty__input');
     const minusBtn = document.querySelector('.product-qty__btn--minus');
     const plusBtn = document.querySelector('.product-qty__btn--plus');
@@ -183,8 +194,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Перенаправлення на сторінку кошика в корені проєкту
-            window.location.href = 'cart.html';
+            // Універсальний перехід на сторінку кошика (працює і локально в папці, і на GitHub Pages)
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/wood_craft_max/')) {
+                window.location.href = '/wood_craft_max/cart.html';
+            } else {
+                window.location.href = 'cart.html';
+            }
         };
     }
 });
