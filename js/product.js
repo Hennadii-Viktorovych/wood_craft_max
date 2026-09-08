@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (res.ok) {
                     const data = await res.json();
 
-                    // Обробка об'єкта з ключами на кшталт "prod_001": {...}
                     if (data && typeof data === 'object' && !Array.isArray(data)) {
                         products = Object.values(data);
                     } else if (Array.isArray(data)) {
@@ -117,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // 5. Зображення (виправлені шляхи для коректного відображення)
+    // 5. Зображення
     let images = [];
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
         images = product.images;
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         thumbsContainer.innerHTML = '';
     }
 
-    // 6. Кошик (Зберігання та універсальний перехід на cart.html)
+    // 6. Додавання в кошик без примусового редіректу (підтримка бічної панелі)
     const qtyInput = document.querySelector('.product-qty__input');
     const minusBtn = document.querySelector('.product-qty__btn--minus');
     const plusBtn = document.querySelector('.product-qty__btn--plus');
@@ -194,12 +193,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Універсальний перехід на сторінку кошика (працює і локально в папці, і на GitHub Pages)
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('/wood_craft_max/')) {
-                window.location.href = '/wood_craft_max/cart.html';
+            // Якщо на сторінці підключено функцію рендерингу/відкриття бічної панелі кошика — викликаємо її
+            if (typeof window.openCartSidebar === 'function') {
+                window.openCartSidebar();
+            } else if (typeof window.renderCart === 'function') {
+                window.renderCart();
             } else {
-                window.location.href = 'cart.html';
+                alert('Товар успішно додано до кошика!');
             }
         };
     }
