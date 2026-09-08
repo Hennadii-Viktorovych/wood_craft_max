@@ -4,59 +4,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let products = [];
 
-    // 1. Пробуємо завантажити через адмінку (для локального серверу з PHP)
-    const adminPaths = [
-        'admin.php?action=get_products',
-        './admin/admin.php?action=get_products',
-        '/wood_craft_max/admin/admin.php?action=get_products'
+    // На GitHub Pages PHP не працює, тому одразу завантажуємо з JSON-файлу
+    const jsonPaths = [
+        'json/product.json',
+        './json/product.json',
+        '/wood_craft_max/json/product.json'
     ];
 
-    for (const path of adminPaths) {
+    for (const path of jsonPaths) {
         try {
             const response = await fetch(path);
             if (response.ok) {
                 const data = await response.json();
-                if (data.ok && Array.isArray(data.products) && data.products.length > 0) {
-                    products = data.products;
-                    break;
+
+                // Якщо дані — це об'єкт з ключами (prod_001, prod_002 тощо)
+                if (data && typeof data === 'object' && !Array.isArray(data)) {
+                    products = Object.values(data);
                 } else if (Array.isArray(data)) {
                     products = data;
-                    break;
+                } else if (data.products && Array.isArray(data.products)) {
+                    products = data.products;
                 }
+
+                if (products.length > 0) break;
             }
-        } catch (e) {}
+        } catch (err) {}
     }
 
-    // 2. Якщо через адмінку не вийшло (GitHub Pages), читаємо напряму з JSON-файлу
-    if (products.length === 0) {
-        const jsonPaths = [
-            'json/product.json',
-            './json/product.json',
-            '/wood_craft_max/json/product.json'
-        ];
-
-        for (const path of jsonPaths) {
-            try {
-                const response = await fetch(path);
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Обробка, якщо дані прийшли у вигляді об'єкта з ключ-значення (як у вашому прикладі)
-                    if (data && typeof data === 'object' && !Array.isArray(data)) {
-                        products = Object.values(data);
-                    } else if (Array.isArray(data)) {
-                        products = data;
-                    } else if (data.products && Array.isArray(data.products)) {
-                        products = data.products;
-                    }
-
-                    if (products.length > 0) break;
-                }
-            } catch (err) {}
-        }
-    }
-
-    // 3. Рендеримо товари на сторінку
+    // Рендеримо товари на сторінку
     if (products.length > 0) {
         catalogGrid.innerHTML = '';
 
