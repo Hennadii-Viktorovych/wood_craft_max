@@ -4,93 +4,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderCartPage() {
     const cartItemsContainer = document.querySelector('.cart-items');
-    const totalPriceEl = document.getElementById('total-price') || document.querySelector('.cart-total-amount'); // Підтримка різних варіантів id
-    const subtotalEl = document.getElementById('subtotal-price');
-
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Якщо контейнера списку товарів немає на сторінці — виходимо
     if (!cartItemsContainer) return;
 
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `
             <div style="text-align: center; padding: 40px 0; color: rgba(255,255,255,0.4);">
                 <p style="font-size: 1.2rem; margin-bottom: 20px;">Ваш кошик порожній</p>
-                <a href="catalog.html" class="cart-summary__btn" style="max-width: 250px; margin: 0 auto; display: inline-flex;">Перейти до каталогу</a>
+                <a href="index.html" class="cart-summary__btn" style="max-width: 250px; margin: 0 auto; display: inline-flex;">Перейти до каталогу</a>
             </div>
         `;
-        updateSummary(0);
+        updateSummary(cart);
         return;
     }
 
-    // Рендеримо список товарів за вашою новою розміткою
     cartItemsContainer.innerHTML = cart.map((item, index) => `
-        <div class="cart-item" data-index="${index}" data-id="${item.id}">
+        <article class="cart-item" data-index="${index}">
             <div class="cart-item__img-placeholder">
                 ${item.image ? `<img src="${item.image}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">` : 'Фото'}
             </div>
-            
+
             <div class="cart-item__info">
                 <h3 class="cart-item__name">${item.name || 'Товар'}</h3>
                 <p class="cart-item__meta">${item.specs && Object.keys(item.specs).length > 0 ? Object.entries(item.specs).map(([k, v]) => `${k}: ${v}`).join(' | ') : 'Ручна робота'}</p>
             </div>
 
             <div class="cart-item__qty">
-                <button class="cart-item__qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
-                <input type="text" class="cart-item__qty-input" value="${item.quantity || 1}" readonly>
-                <button class="cart-item__qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                <button class="cart-item__qty-btn cart-item__qty-btn--minus" onclick="changeQuantity(${index}, -1)">−</button>
+                <input class="cart-item__qty-input" type="number" value="${item.quantity || 1}" min="1" max="99" onchange="updateQuantityInput(${index}, this.value)">
+                <button class="cart-item__qty-btn cart-item__qty-btn--plus" onclick="changeQuantity(${index}, 1)">+</button>
             </div>
 
             <div class="cart-item__price-block">
-                <div class="cart-item__price">${(item.price || 0) * (item.quantity || 1)} ₴</div>
+                <span class="cart-item__price">${(item.price || 0) * (item.quantity || 1)} ₴</span>
             </div>
 
-            <button class="cart-item__remove" onclick="removeItem(${index})" title="Видалити товар">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <button class="cart-item__remove" aria-label="Видалити товар" onclick="removeItem(${index})">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
-        </div>
+        </article>
     `).join('');
 
-    calculateTotals(cart);
+    updateSummary(cart);
 }
 
-// Зміна кількості товару (+ / -)
+// Зміна кількості через кнопки + / -
 window.changeQuantity = function(index, delta) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart[index]) {
         cart[index].quantity = (cart[index].quantity || 1) + delta;
-        if (cart[index].quantity < 1) {
-            cart[index].quantity = 1;
-        }
+        if (cart[index].quantity < 1) cart[index].quantity = 1;
         localStorage.setItem('cart', JSON.stringify(cart));
         renderCartPage();
-
-        // Також оновлюємо виїзну панель, якщо вона десь на фоні синхронізована
-        if (typeof window.renderCart === 'function') window.renderCart();
     }
 }
 
-// Видалення окремого товару
+// Зміна кількості прямим введенням у числове поле
+window.updateQuantityInput = function(index, value) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let val = parseInt(value);
+    if (cart[index]) {
+        cart[index].quantity = isNaN(val) || val < 1 ? 1 : val;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCartPage();
+    }
+}
+
+// Видалення товару
 window.removeItem = function(index) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCartPage();
-
-    if (typeof window.renderCart === 'function') window.renderCart();
 }
 
-// Підрахунок загальної суми
-function calculateTotals(cart) {
-    let subtotal = cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
-    updateSummary(subtotal);
-}
+// Підрахунок і виведення підсумків у праву колонку
+function updateSummary(cart) {
+    let totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    let totalPrice = cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
 
-function updateSummary(subtotal) {
-    // Шукаємо елементи виведення сум у блоці чека правої колонки
-    const subtotalElements = document.querySelectorAll('.cart-subtotal');
-    subtotalElements.forEach(el => el.textContent = `${subtotal} ₴`);
+    const summaryTotals = document.querySelectorAll('.cart-summary__totals .cart-total-row');
 
-    const finalElements = document.querySelectorAll('.cart-total-amount, #total-price');
-    finalElements.forEach(el => el.textContent = `${subtotal} ₴`);
+    if (summaryTotals.length >= 4) {
+        // Кількість товарів
+        summaryTotals[0].querySelectorAll('span')[1].textContent = `${totalItems} шт.`;
+        // Сума замовлення
+        summaryTotals[1].querySelectorAll('span')[1].textContent = `${totalPrice} ₴`;
+        // Разом (фінальна сума)
+        summaryTotals[3].querySelectorAll('span')[1].textContent = `${totalPrice} ₴`;
+    }
 }
