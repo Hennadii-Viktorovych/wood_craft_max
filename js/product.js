@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         thumbsContainer.innerHTML = '';
     }
 
-    // 6. Додавання в кошик із викликом виїзної панелі
+    // 6. Додавання в кошик
     const qtyInput = document.querySelector('.product-qty__input');
     const minusBtn = document.querySelector('.product-qty__btn--minus');
     const plusBtn = document.querySelector('.product-qty__btn--plus');
@@ -193,14 +193,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Відкриваємо виїзну панель та оновлюємо кошик
-            openCartDrawer();
+            // Відкриваємо виїзну панель лише якщо ми НЕ на сторінці cart.html
+            if (!window.location.pathname.includes('cart.html')) {
+                openCartDrawer();
+            } else if (typeof renderCart === 'function') {
+                renderCart();
+            }
         };
     }
 });
 
-// Глобальні функції для управління виїзною панеллю кошика
+// Глобальні функції управління панеллю
 window.openCartDrawer = function() {
+    if (window.location.pathname.includes('cart.html')) return;
     const cartEl = document.querySelector('.header__cart');
     const overlay = document.getElementById('cart-overlay');
     if (cartEl) cartEl.classList.add('open');
