@@ -1,111 +1,123 @@
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 document.addEventListener('DOMContentLoaded', () => {
-    renderCart();
+    cartUpdateUI();
+    renderCartPage();
 });
 
-function renderCart() {
-    const container = document.querySelector('.cart-items');
-    const summaryContainer = document.querySelector('.cart-summary__totals');
+// Функція швидкого додавання з каталогу
+function quickAddToCart(id, nameEncoded, price, image) {
+    const name = decodeURIComponent(nameEncoded);
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    let existing = cart.find(item => String(item.id) === String(id));
+    if (existing) {
+        existing.quantity = (existing.quantity || existing.qty || 1) + 1;
+        existing.qty = existing.quantity;
+    } else {
+        cart.push({ id, name, price, image: image || '', quantity: 1, qty: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    cartUpdateUI();
+}
+
+function cartSave() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function cartCount() {
+    return cart.reduce((sum, item) => sum + (item.quantity || item.qty || 0), 0);
+}
+
+function cartUpdateUI() {
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const counters = document.querySelectorAll('.cart-count, .header__cart-count');
+    const count = cartCount();
+    counters.forEach(el => {
+        el.textContent = count;
+        el.style.display = count > 0 ? 'inline-block' : 'none';
+    });
+}
+
+function renderCartPage() {
+    const container = document.getElementById('cart-items') || document.querySelector('.cart-items');
     if (!container) return;
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const summaryContainer = document.querySelector('.cart-summary__totals');
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     if (cart.length === 0) {
-        container.innerHTML = '<p style="color: #e8e0d4; padding: 20px; font-size: 16px;">Ваш кошик порожній.</p>';
+        container.innerHTML = '<p style="color: #e8e0d4; padding: 20px;">Ваш кошик порожній.</p>';
         if (summaryContainer) {
             summaryContainer.innerHTML = `
-                <div class="cart-total-row"><span>Кількість товарів:</span><span>0 шт.</span></div>
-                <div class="cart-total-row"><span>Сума замовлення:</span><span>0 ₴</span></div>
-                <hr class="cart-summary__divider">
+                <div class="cart-total-row"><span>Кількість:</span><span>0 шт.</span></div>
                 <div class="cart-total-row cart-total-row--final"><span>Разом:</span><span>0 ₴</span></div>
             `;
         }
         return;
     }
 
-    let totalQuantity = 0;
-    let totalPrice = 0;
-
     container.innerHTML = cart.map((item, index) => {
-        totalQuantity += item.quantity;
-        totalPrice += item.price * item.quantity;
+        const qty = item.quantity || item.qty || 1;
+        totalQuantity += qty;
+        totalPrice += item.price * qty;
+
+        // Безпечна перевірка картинки, щоб уникнути 404 помилок
+        const imgSrc = (item.image && item.image.trim() !== '') ? item.image : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="%23555" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
 
         return `
-            <article class="cart-item" data-index="${index}">
-                <div class="cart-item__img-placeholder" style="overflow: hidden; padding: 0;">
-                    <img src="${item.image || 'images/placeholder.png'}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="cart-item" data-index="${index}" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #332d28; padding-bottom: 15px;">
+                <img src="${imgSrc}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; background: #222;">
+                <div style="flex: 1; color: #e8e0d4;">
+                    <div style="font-weight: 600; font-size: 16px;">${item.name}</div>
+                    <div style="font-size: 14px; margin-top: 5px;">${qty} шт. × ${item.price} ₴ = ${item.price * qty} ₴</div>
                 </div>
-
-                <div class="cart-item__info">
-                    <h3 class="cart-item__name">${item.name}</h3>
-                    <p class="cart-item__meta">${item.specs ? Object.values(item.specs).join(', ') : 'Ручна робота'}</p>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <button onclick="updateQty(${index}, -1)" style="padding: 5px 10px; background: #333; color: #fff; border: none; cursor: pointer; border-radius: 3px;">-</button>
+                    <span style="color: #fff; padding: 0 5px;">${qty}</span>
+                    <button onclick="updateQty(${index}, 1)" style="padding: 5px 10px; background: #333; color: #fff; border: none; cursor: pointer; border-radius: 3px;">+</button>
                 </div>
-
-                <div class="cart-item__qty">
-                    <button class="cart-item__qty-btn cart-item__qty-btn--minus" onclick="updateQty(${index}, -1)">−</button>
-                    <input class="cart-item__qty-input" type="number" value="${item.quantity}" min="1" max="99" onchange="changeQtyInput(${index}, this.value)">
-                    <button class="cart-item__qty-btn cart-item__qty-btn--plus" onclick="updateQty(${index}, 1)">+</button>
-                </div>
-
-                <div class="cart-item__price-block">
-                    <span class="cart-item__price">${item.price * item.quantity} ₴</span>
-                </div>
-
-                <button class="cart-item__remove" aria-label="Видалити товар" onclick="removeItem(${index})">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </article>
+                <button onclick="removeItem(${index})" style="background: none; border: none; color: #a75a5a; cursor: pointer; font-size: 18px; margin-left: 10px;">✕</button>
+            </div>
         `;
     }).join('');
 
     if (summaryContainer) {
         summaryContainer.innerHTML = `
-            <div class="cart-total-row">
-                <span>Кількість товарів:</span>
-                <span>${totalQuantity} шт.</span>
-            </div>
-            <div class="cart-total-row">
-                <span>Сума замовлення:</span>
-                <span>${totalPrice} ₴</span>
-            </div>
-            <div class="cart-total-row">
-                <span>Доставка:</span>
-                <span class="cart-total-row__shipping">За тарифами ТК</span>
-            </div>
-            <hr class="cart-summary__divider">
-            <div class="cart-total-row cart-total-row--final">
-                <span>Разом:</span>
-                <span>${totalPrice} ₴</span>
-            </div>
+            <div class="cart-total-row"><span>Кількість:</span><span>${totalQuantity} шт.</span></div>
+            <div class="cart-total-row cart-total-row--final"><span>Разом:</span><span>${totalPrice} ₴</span></div>
         `;
     }
 }
 
 function updateQty(index, delta) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart[index]) {
-        cart[index].quantity += delta;
-        if (cart[index].quantity < 1) cart[index].quantity = 1;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
-    }
-}
-
-function changeQtyInput(index, value) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let val = parseInt(value);
-    if (cart[index] && !isNaN(val) && val > 0) {
-        cart[index].quantity = val;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
+        let currentQty = (cart[index].quantity || cart[index].qty || 1) + delta;
+        if (currentQty < 1) currentQty = 1;
+        cart[index].quantity = currentQty;
+        cart[index].qty = currentQty;
+        cartSave();
+        renderCartPage();
+        cartUpdateUI();
     }
 }
 
 function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
+    cartSave();
+    renderCartPage();
+    cartUpdateUI();
+}
+
+function cartClear() {
+    cart = [];
+    cartSave();
+    renderCartPage();
+    cartUpdateUI();
 }

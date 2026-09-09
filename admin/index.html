@@ -3,499 +3,842 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WoodCraft — Адмінка</title>
+    <title>Адмінка — WoodCraft</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --bg: #141210; --surface: #1d1a17; --surface2: #252118;
-            --border: #2e2a24; --accent: #c8a96e; --accent-d: #a8894e;
-            --danger: #c0614a; --success: #6a9e6e; --text: #e8e0d4;
-            --muted: #7a7060; --r: 8px;
-            --serif: 'Cormorant Garamond', Georgia, serif;
-            --sans: 'Fira Sans', system-ui, sans-serif;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#0a0a0a;--s1:#111;--s2:#161616;--s3:#1c1c1c;
+            --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+            --gold:#c8a050;--gold-bg:rgba(200,160,80,.1);--gold-border:rgba(200,160,80,.25);
+            --text:#e8e2d9;--muted:#7a7060;--danger:#c0614a;--success:#5a9e6a;
+            --font:'Fira Sans',system-ui,sans-serif;
+            --serif:'Cormorant Garamond',Georgia,serif;--r:6px;
         }
-        body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; font-weight: 300; }
-        #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .login-wrap { width: 360px; padding: 0 20px; }
-        .login-wrap h1 { font-family: var(--serif); font-size: 32px; font-weight: 400; text-align: center; margin-bottom: 4px; color: var(--accent); }
-        .login-wrap p { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 32px; }
-        .login-wrap input { width: 100%; padding: 12px 14px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--sans); font-size: 14px; outline: none; transition: border-color .2s; }
-        .login-wrap input:focus { border-color: var(--accent); }
-        #login-err { color: var(--danger); font-size: 12px; min-height: 16px; margin-bottom: 8px; text-align: center; }
-        #app { display: none; }
-        .sidebar { position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 0; z-index: 10; }
-        .sidebar-brand { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); font-family: var(--serif); font-size: 20px; font-weight: 400; color: var(--accent); letter-spacing: .5px; }
-        .sidebar-brand span { display: block; font-family: var(--sans); font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 2px; }
-        .nav-list { padding: 12px 0; flex: 1; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; cursor: pointer; color: var(--muted); font-size: 13.5px; font-weight: 400; border-left: 2px solid transparent; transition: all .15s; }
-        .nav-item:hover { color: var(--text); background: rgba(200,169,110,.05); }
-        .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(200,169,110,.07); }
-        .nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
-        .sidebar-foot { padding: 16px 20px; border-top: 1px solid var(--border); }
-        .main { margin-left: 210px; padding: 36px 32px; min-height: 100vh; }
-        .ph { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-        .ph h2 { font-family: var(--serif); font-size: 26px; font-weight: 400; }
-        .panel { display: none; }
-        .panel.active { display: block; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
-        .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; }
-        .stat-val { font-family: var(--serif); font-size: 36px; font-weight: 600; line-height: 1; color: var(--accent); }
-        .stat-lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 20px; }
-        .card-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .card-head h3 { font-size: 13px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 10px 16px; font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .5px; border-bottom: 1px solid var(--border); font-weight: 500; }
-        td { padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(200,169,110,.03); }
-        .prod-img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); }
-        .prod-img-ph { width: 44px; height: 44px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 18px; }
-        .prod-name { font-weight: 500; font-size: 14px; }
-        .prod-cat { font-size: 12px; color: var(--muted); margin-top: 2px; }
-        .price-cell { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--accent); white-space: nowrap; }
-        .old-price { font-size: 13px; text-decoration: line-through; color: var(--muted); margin-left: 6px; font-weight: 400; }
-        .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-        .badge-instock { background: rgba(106,158,110,.15); color: #8abf8e; }
-        .badge-outstock { background: rgba(192,97,74,.15); color: var(--danger); }
-        .btn { padding: 9px 18px; border: none; border-radius: var(--r); cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--sans); transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-gold { background: var(--accent); color: #141210; }
-        .btn-gold:hover { background: var(--accent-d); }
-        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-        .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
-        .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
-        .btn-icon { padding: 7px; display: inline-flex; align-items: center; justify-content: center;}
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(3px); }
-        .modal-overlay.open { display: flex; }
-        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 640px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
-        .modal-head { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--surface); z-index: 2; }
-        .modal-head h3 { font-family: var(--serif); font-size: 20px; font-weight: 400; }
-        .modal-body { padding: 24px; }
-        .modal-foot { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; position: sticky; bottom: 0; background: var(--surface); z-index: 2;}
-        .fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        .fg label { font-size: 12px; color: var(--muted); }
-        .fg input, .fg textarea, .fg select { padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--sans); font-size: 14px; outline: none; transition: border-color .2s; }
-        .fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--accent); }
-        .fg textarea { resize: vertical; min-height: 80px; }
-        .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .char-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        .char-row input { flex: 1; margin-bottom: 0 !important; }
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); }
-        .toggle { position: relative; width: 40px; height: 22px; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 22px; cursor: pointer; transition: .2s; }
-        .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
-        .toggle input:checked + .toggle-slider { background: var(--success); }
-        .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
-        #upload-zone { border: 2px dashed var(--border); border-radius: var(--r); padding: 24px 16px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: var(--bg); position: relative; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #upload-zone:hover { border-color: var(--accent); background: rgba(200,169,110,.05); }
-        #upload-preview { width: 100%; position: relative; }
-        #upload-preview img { width: 100%; max-height: 160px; object-fit: contain; border-radius: 6px; display: block; }
-        #toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 18px; font-size: 13px; opacity: 0; transform: translateY(6px); transition: all .3s; pointer-events: none; z-index: 999; }
-        #toast.show { opacity: 1; transform: none; }
-        #toast.ok { border-color: var(--success); color: #8abf8e; }
-        #toast.err { border-color: var(--danger); color: var(--danger); }
-        .empty { text-align: center; padding: 52px; color: var(--muted); }
-        .empty-icon { font-size: 32px; margin-bottom: 8px; }
+        body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh}
+        .layout{display:flex;min-height:100vh}
+        .sidebar{width:230px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+        .sidebar__logo{padding:26px 24px 22px;border-bottom:1px solid var(--border);font-size:15px;font-weight:700;letter-spacing:.04em;color:var(--gold)}
+        .sidebar__nav{display:flex;flex-direction:column;gap:2px;padding:12px 10px;flex:1}
+        .nav-btn{background:none;border:none;color:var(--muted);font-family:var(--font);font-size:13px;text-align:left;padding:10px 14px;border-radius:var(--r);cursor:pointer;transition:color .15s,background .15s;display:flex;align-items:center;gap:10px}
+        .nav-btn:hover{color:var(--text);background:var(--s2)}
+        .nav-btn.active{color:var(--gold);background:var(--gold-bg);font-weight:500}
+        .sidebar__bottom{padding:12px 10px;border-top:1px solid var(--border)}
+        .sidebar__link{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-decoration:none;padding:8px 14px;border-radius:var(--r);transition:color .15s,background .15s}
+        .sidebar__link:hover{color:var(--text);background:var(--s2)}
+        .main{flex:1;padding:40px 48px;max-width:1100px}
+        .screen{display:none}.screen.active{display:block}
+
+        /* LOGIN */
+        .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .login-box{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:48px 40px;width:380px;max-width:95vw}
+        .login-logo{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:32px;text-align:center}
+        .login-title{font-size:22px;font-weight:600;margin-bottom:8px;text-align:center}
+        .login-sub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:32px}
+
+        /* FORM */
+        .f-group{margin-bottom:16px}
+        .f-label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+        .f-input,.f-textarea,.f-select{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font);font-size:14px;padding:10px 14px;outline:none;transition:border-color .15s}
+        .f-input:focus,.f-textarea:focus,.f-select:focus{border-color:var(--gold)}
+        .f-textarea{resize:vertical;min-height:90px;line-height:1.6}
+        .f-select option{background:#1c1c1c}
+        .f-row{display:flex;gap:14px}
+        .f-row .f-group{flex:1}
+        .f-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+        /* BUTTONS */
+        .btn{font-family:var(--font);font-size:13px;font-weight:500;padding:10px 20px;border-radius:var(--r);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s,transform .15s;white-space:nowrap}
+        .btn:hover{opacity:.85}.btn:active{transform:scale(.98)}
+        .btn-primary{background:var(--gold);color:#0a0a0a}
+        .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
+        .btn-ghost:hover{background:var(--s2)}
+        .btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+        .btn-danger:hover{background:var(--danger);color:#fff;opacity:1}
+        .btn-sm{padding:6px 12px;font-size:12px}
+        .btn-full{width:100%;justify-content:center;padding:13px}
+
+        /* PAGE HEADER */
+        .page-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+        .page-title{font-size:22px;font-weight:600}
+        .page-sub{color:var(--muted);font-size:13px;margin-top:4px}
+
+        /* TABLE */
+        .prod-table-wrap{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        .prod-table{width:100%;border-collapse:collapse}
+        .prod-table th{padding:14px 18px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:left;border-bottom:1px solid var(--border);background:var(--s2)}
+        .prod-table td{padding:14px 18px;border-bottom:1px solid var(--border);vertical-align:middle}
+        .prod-table tr:last-child td{border-bottom:none}
+        .prod-table tr:hover td{background:rgba(255,255,255,.02)}
+        .prod-thumb{width:52px;height:52px;object-fit:cover;border-radius:4px;background:var(--s3);border:1px solid var(--border)}
+        .prod-thumb-ph{width:52px;height:52px;border-radius:4px;background:var(--s3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px}
+        .prod-name{font-weight:500}
+        .prod-cat{font-size:12px;color:var(--muted);margin-top:3px}
+        .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+        .badge-green{background:rgba(90,158,106,.15);color:#5a9e6a;border:1px solid rgba(90,158,106,.25)}
+        .badge-red{background:rgba(192,97,74,.15);color:#c0614a;border:1px solid rgba(192,97,74,.25)}
+        .td-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+        /* ORDERS */
+        .order-card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:22px 24px;margin-bottom:12px}
+        .order-card__hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+        .order-id{font-size:12px;color:var(--muted);font-family:monospace}
+        .order-name{font-weight:600;font-size:15px}
+        .order-phone{color:var(--muted);font-size:13px;margin-top:2px}
+        .order-item{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px}
+        .order-item span:last-child{color:var(--text);font-weight:500}
+        .order-total{font-size:16px;font-weight:700;color:var(--gold);text-align:right;margin-bottom:14px}
+        .order-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .order-date{font-size:12px;color:var(--muted)}
+        .order-status-sel{background:var(--s3);border:1px solid var(--border2);color:var(--text);font-family:var(--font);font-size:12px;padding:6px 10px;border-radius:4px;cursor:pointer;outline:none}
+        .status-new{background:rgba(200,160,80,.12);color:var(--gold);border:1px solid var(--gold-border)}
+        .status-processing{background:rgba(74,128,192,.12);color:#4a90e2;border:1px solid rgba(74,128,192,.25)}
+        .status-shipped{background:rgba(146,74,192,.12);color:#9b59b6;border:1px solid rgba(146,74,192,.25)}
+        .status-done{background:rgba(90,158,106,.12);color:#5a9e6a;border:1px solid rgba(90,158,106,.25)}
+        .status-cancelled{background:rgba(192,97,74,.12);color:#c0614a;border:1px solid rgba(192,97,74,.25)}
+
+        /* IMAGE UPLOADER */
+        .img-drop-zone{border:2px dashed var(--border2);border-radius:8px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+        .img-drop-zone:hover,.img-drop-zone.drag-over{border-color:var(--gold);background:var(--gold-bg)}
+        .img-drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+        .img-drop-icon{font-size:28px;margin-bottom:8px}
+        .img-drop-text{font-size:13px;color:var(--muted)}
+        .img-drop-text strong{color:var(--gold)}
+        .img-drop-hint{font-size:11px;color:var(--muted);margin-top:4px}
+        .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:14px}
+        .img-item{position:relative;border-radius:6px;overflow:hidden;border:2px solid var(--border);aspect-ratio:1;cursor:grab;transition:border-color .15s,transform .15s}
+        .img-item:hover{border-color:var(--border2)}
+        .img-item.is-main{border-color:var(--gold)}
+        .img-item.dragging{opacity:.4}
+        .img-item.drag-target{border-color:var(--gold);transform:scale(1.04)}
+        .img-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+        .img-item__del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.75);border:none;color:#fff;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+        .img-item:hover .img-item__del{opacity:1}
+        .img-item__badge{position:absolute;bottom:0;left:0;right:0;background:rgba(200,160,80,.9);color:#0a0a0a;font-size:10px;font-weight:700;text-align:center;padding:3px 0;display:none}
+        .img-item.is-main .img-item__badge{display:block}
+        .img-item__star{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.75);border:none;color:#fff;font-size:10px;padding:3px 6px;border-radius:3px;cursor:pointer;opacity:0;transition:opacity .15s;white-space:nowrap}
+        .img-item:hover .img-item__star{opacity:1}
+        .img-uploading{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px}
+
+        /* SPECS */
+        .specs-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+        .spec-row{display:flex;gap:8px;align-items:center}
+        .spec-row .f-input{flex:1}
+        .spec-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;transition:color .15s}
+        .spec-del:hover{color:var(--danger)}
+
+        /* MODAL */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:100;align-items:flex-start;justify-content:center;padding:24px 20px;overflow-y:auto}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--s1);border:1px solid var(--border2);border-radius:12px;width:680px;max-width:100%;padding:32px;margin:auto;position:relative}
+        .modal__hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+        .modal__title{font-size:18px;font-weight:600}
+        .modal__close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:24px;line-height:1;transition:color .15s}
+        .modal__close:hover{color:var(--text)}
+        .modal__foot{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+
+        /* PREVIEW */
+        .preview-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:200;overflow-y:auto}
+        .preview-overlay.open{display:block}
+        .preview-bar{position:sticky;top:0;background:rgba(10,10,10,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:10}
+        .preview-bar__label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:10px}
+        .preview-bar__label span{background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+        .preview-content{max-width:1000px;margin:0 auto;padding:48px 24px}
+        .pv-single{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+        @media(max-width:640px){.pv-single{grid-template-columns:1fr}}
+        .pv-gallery__main{aspect-ratio:1;background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+        .pv-gallery__main img{width:100%;height:100%;object-fit:cover;display:block}
+        .pv-gallery__main-ph{font-size:64px;color:var(--muted)}
+        .pv-thumbs{display:flex;gap:8px;flex-wrap:wrap}
+        .pv-thumb{width:68px;height:68px;border-radius:5px;overflow:hidden;border:2px solid var(--border);cursor:pointer;transition:border-color .15s;flex-shrink:0}
+        .pv-thumb.active{border-color:var(--gold)}
+        .pv-thumb img{width:100%;height:100%;object-fit:cover}
+        .pv-info__title{font-family:var(--serif);font-size:clamp(24px,3vw,38px);font-weight:700;line-height:1.15;margin-bottom:16px}
+        .pv-info__meta{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+        .pv-price{font-size:28px;font-weight:700;color:var(--gold)}
+        .pv-old-price{font-size:16px;color:var(--muted);text-decoration:line-through}
+        .pv-status-badge{font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;background:rgba(90,158,106,.12);color:#5a9e6a;border:1px solid rgba(90,158,106,.25)}
+        .pv-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+        .pv-purchase{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+        .pv-qty{display:flex;align-items:center;border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
+        .pv-qty-btn{width:36px;height:40px;background:none;border:none;color:var(--text);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+        .pv-qty-btn:hover{background:var(--s3)}
+        .pv-qty-input{width:44px;height:40px;background:none;border:none;color:var(--text);font-family:var(--font);font-size:14px;text-align:center;outline:none}
+        .pv-btn-cart{flex:1;padding:12px 20px;background:var(--gold);color:#0a0a0a;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:default;display:flex;align-items:center;justify-content:center;gap:8px}
+        .pv-btn-buy{padding:12px 20px;background:none;border:1px solid var(--border2);color:var(--text);border-radius:var(--r);font-size:14px;cursor:default}
+        .pv-desc-title{font-size:15px;font-weight:600;margin-bottom:10px}
+        .pv-desc-text{font-size:14px;line-height:1.8;color:rgba(232,226,217,.7);white-space:pre-line}
+        .pv-specs{margin-top:20px}
+        .pv-specs-table{width:100%;border-collapse:collapse;margin-top:10px}
+        .pv-specs-table tr{border-bottom:1px solid var(--border)}
+        .pv-specs-table tr:last-child{border:none}
+        .pv-specs-table td{padding:9px 4px;font-size:13px}
+        .pv-specs-table td:first-child{color:var(--muted);width:45%}
+        .pv-specs-table td:last-child{font-weight:500}
+        .pv-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+        .pv-feature{background:var(--gold-bg);border:1px solid var(--gold-border);color:var(--gold);font-size:12px;padding:4px 12px;border-radius:3px}
+
+        /* EMPTY / LOADING */
+        .empty{text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--border);border-radius:10px}
+        .empty__icon{font-size:40px;margin-bottom:12px}
+        .loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+        .spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* CONFIRM */
+        .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center}
+        .confirm-overlay.open{display:flex}
+        .confirm-box{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:28px 32px;width:360px;max-width:95vw;text-align:center}
+        .confirm-box__title{font-size:17px;font-weight:600;margin-bottom:10px}
+        .confirm-box__sub{color:var(--muted);font-size:13px;margin-bottom:24px;line-height:1.6}
+        .confirm-box__btns{display:flex;gap:10px;justify-content:center}
+
+        /* TOAST */
+        .wc-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s3);border:1px solid var(--border2);color:var(--text);padding:12px 24px;border-radius:40px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+        .wc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+        .wc-toast.ok{border-color:rgba(90,158,106,.4);background:rgba(90,158,106,.15);color:#7dcc8e}
+        .wc-toast.err{border-color:rgba(192,97,74,.4);background:rgba(192,97,74,.15);color:#e07060}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <div class="login-wrap">
-        <h1>WoodCraft</h1>
-        <p>Панель управління</p>
-        <input type="password" id="pw" placeholder="Пароль">
-        <div id="login-err"></div>
-        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px" onclick="doLogin()">Увійти</button>
+<!-- LOGIN -->
+<div id="screen-login" class="login-wrap">
+    <div class="login-box">
+        <div class="login-logo">🪵 WoodCraft Admin</div>
+        <h1 class="login-title">Вхід в адмінку</h1>
+        <p class="login-sub">Введіть пароль для доступу</p>
+        <div class="f-group">
+            <label class="f-label">Пароль</label>
+            <input type="password" class="f-input" id="login-pass" placeholder="••••••••">
+        </div>
+        <p id="login-err" style="color:#e07060;font-size:13px;margin-bottom:14px;display:none">Невірний пароль</p>
+        <button class="btn btn-primary btn-full" onclick="doLogin()">Увійти</button>
     </div>
 </div>
 
-<div id="app">
-    <nav class="sidebar">
-        <div class="sidebar-brand">WoodCraft <span>адміністратор</span></div>
-        <div class="nav-list">
-            <div class="nav-item active" data-p="products" onclick="nav(this)">
-                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                <span>Каталог</span>
-            </div>
-            <div class="nav-item" data-p="orders" onclick="nav(this)">
-                <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-                <span>Замовлення</span>
-            </div>
+<!-- APP -->
+<div id="screen-app" class="layout" style="display:none">
+    <aside class="sidebar">
+        <div class="sidebar__logo">🪵 WoodCraft</div>
+        <nav class="sidebar__nav">
+            <button class="nav-btn active" onclick="switchTab('products')" id="nav-products">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Товари
+            </button>
+            <button class="nav-btn" onclick="switchTab('orders')" id="nav-orders">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Замовлення
+                <span id="orders-badge" style="background:var(--danger);color:#fff;border-radius:20px;font-size:10px;padding:2px 7px;margin-left:auto;display:none"></span>
+            </button>
+        </nav>
+        <div class="sidebar__bottom">
+            <a href="../index.html" target="_blank" class="sidebar__link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Переглянути сайт
+            </a>
+            <button class="nav-btn" onclick="doLogout()" style="color:var(--danger);margin-top:4px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Вийти
+            </button>
         </div>
-        <div class="sidebar-foot">
-            <div class="nav-item" onclick="logout()" style="color:var(--danger)">
-                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Вийти</span>
-            </div>
-        </div>
-    </nav>
+    </aside>
 
     <main class="main">
-        <div class="panel active" id="panel-products">
-            <div class="ph">
-                <h2>Каталог товарів</h2>
-                <button class="btn btn-gold" onclick="openProductModal()">+ Додати товар</button>
-            </div>
-            <div class="stats" id="prod-stats">
-                <div class="stat"><div class="stat-val" id="ps-total">—</div><div class="stat-lbl">Всього товарів</div></div>
-                <div class="stat"><div class="stat-val" id="ps-instock">—</div><div class="stat-lbl">В наявності</div></div>
-                <div class="stat"><div class="stat-val" id="ps-out">—</div><div class="stat-lbl">Немає в наявності</div></div>
-                <div class="stat"><div class="stat-val" id="ps-cats">—</div><div class="stat-lbl">Категорій</div></div>
-            </div>
-            <div class="card">
-                <div class="card-head">
-                    <h3>Товари</h3>
-                    <button class="btn btn-ghost btn-sm" onclick="loadProducts()">↺ Оновити</button>
+        <!-- PRODUCTS TAB -->
+        <div class="screen active" id="tab-products">
+            <div class="page-hdr">
+                <div>
+                    <h1 class="page-title">Товари</h1>
+                    <p class="page-sub" id="products-sub">Завантаження…</p>
                 </div>
-                <div id="products-table"><div class="empty"><div class="empty-icon">🪵</div>Завантаження…</div></div>
+                <button class="btn btn-primary" onclick="openProductModal()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Додати товар
+                </button>
             </div>
+            <div id="products-content"><div class="loading"><div class="spinner"></div>Завантаження…</div></div>
         </div>
 
-        <div class="panel" id="panel-orders">
-            <div class="ph">
-                <h2>Замовлення</h2>
-                <button class="btn btn-ghost btn-sm" onclick="loadOrders()">↺ Оновити</button>
+        <!-- ORDERS TAB -->
+        <div class="screen" id="tab-orders">
+            <div class="page-hdr">
+                <div>
+                    <h1 class="page-title">Замовлення</h1>
+                    <p class="page-sub" id="orders-sub">Завантаження…</p>
+                </div>
+                <button class="btn btn-ghost" onclick="loadOrders()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    Оновити
+                </button>
             </div>
-            <div class="card">
-                <div id="orders-table"><div class="empty"><div class="empty-icon">📋</div>Завантаження…</div></div>
-            </div>
+            <div id="orders-content"><div class="loading"><div class="spinner"></div>Завантаження…</div></div>
         </div>
     </main>
 </div>
 
-<div class="modal-overlay" id="prod-modal">
+<!-- MODAL: PRODUCT FORM -->
+<div class="modal-overlay" id="product-modal" onclick="closeOnOverlay(event,'product-modal')">
     <div class="modal">
-        <div class="modal-head">
-            <h3 id="modal-title">Новий товар</h3>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('prod-modal')">✕</button>
+        <div class="modal__hdr">
+            <h2 class="modal__title" id="modal-title">Новий товар</h2>
+            <button class="modal__close" onclick="closeModal('product-modal')">×</button>
         </div>
-        <div class="modal-body">
-            <input type="hidden" id="edit-id">
+        <input type="hidden" id="f-id">
 
-            <div class="frow">
-                <div class="fg" style="grid-column:1/-1">
-                    <label>Назва товару *</label>
-                    <input type="text" id="f-name" placeholder="Дошка з волоського горіха">
-                </div>
+        <div class="f-row">
+            <div class="f-group" style="flex:2">
+                <label class="f-label">Назва *</label>
+                <input type="text" class="f-input" id="f-name" placeholder="Дошка з дуба">
             </div>
-
-            <div class="frow">
-                <div class="fg">
-                    <label>Актуальна ціна (₴) *</label>
-                    <input type="number" id="f-price" placeholder="1200" min="0" step="10">
-                </div>
-                <div class="fg">
-                    <label>Стара ціна (₴) <span style="color:var(--muted);font-size:10px">(необов'язково)</span></label>
-                    <input type="number" id="f-old-price" placeholder="1500" min="0" step="10">
-                </div>
-            </div>
-
-            <div class="fg">
-                <label>Категорія</label>
-                <input type="text" id="f-cat" placeholder="Дошки для подачі">
-            </div>
-
-            <div class="fg">
-                <label>Опис товару</label>
-                <textarea id="f-desc" placeholder="Виготовлена з масиву волоського горіха..."></textarea>
-            </div>
-
-            <div style="border-top: 1px solid var(--border); margin: 24px 0 16px;"></div>
-
-            <div class="fg">
-                <label style="display:flex; justify-content:space-between; align-items:center;">
-                    Характеристики (Розмір, Матеріал, тощо)
-                    <button class="btn btn-ghost btn-sm" onclick="addCharRow()">+ Додати</button>
-                </label>
-                <div id="chars-list"></div>
-            </div>
-
-            <div class="fg" style="margin-top: 8px;">
-                <label>Переваги / Теги (через кому)</label>
-                <input type="text" id="f-tags" placeholder="Безпечно для їжі, Ручна робота, Доставка по Україні">
-            </div>
-
-            <div style="border-top: 1px solid var(--border); margin: 24px 0 16px;"></div>
-
-            <div class="fg">
-                <label>Головне фото товару</label>
-                <div id="upload-zone" onclick="document.getElementById('f-file').click()" ondragover="uploadDragOver(event)" ondragleave="uploadDragLeave(event)" ondrop="uploadDrop(event)">
-                    <div id="upload-placeholder">
-                        <div style="font-size:28px;margin-bottom:6px">📁</div>
-                        <div style="font-size:13px;color:var(--muted)">Перетягніть фото або <span style="color:var(--accent);text-decoration:underline">виберіть з пристрою</span></div>
-                        <div style="font-size:11px;color:var(--muted);margin-top:4px">JPG, PNG, WEBP — до 5 МБ</div>
-                    </div>
-                    <div id="upload-preview" style="display:none">
-                        <img id="upload-preview-img" src="" style="max-height:160px;max-width:100%;border-radius:6px;object-fit:contain">
-                        <button type="button" id="upload-remove-btn" onclick="removeUploadedImage(event)" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px">✕</button>
-                    </div>
-                </div>
-                <input type="file" id="f-file" accept="image/*" style="display:none" onchange="handleFileSelect(this.files[0])">
-                <input type="hidden" id="f-img">
-            </div>
-
-            <div class="toggle-row">
-                <span style="font-size:13px">В наявності</span>
-                <label class="toggle"><input type="checkbox" id="f-stock" checked><span class="toggle-slider"></span></label>
+            <div class="f-group">
+                <label class="f-label">Категорія</label>
+                <input type="text" class="f-input" id="f-category" placeholder="Обробні дошки">
             </div>
         </div>
-        <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeModal('prod-modal')">Скасувати</button>
-            <button class="btn btn-gold" onclick="saveProduct()">Зберегти товар</button>
+
+        <div class="f-row">
+            <div class="f-group">
+                <label class="f-label">Ціна ₴ *</label>
+                <input type="number" class="f-input" id="f-price" placeholder="1200" min="0">
+            </div>
+            <div class="f-group">
+                <label class="f-label">Стара ціна ₴</label>
+                <input type="number" class="f-input" id="f-old-price" placeholder="1500" min="0">
+            </div>
+            <div class="f-group">
+                <label class="f-label">Наявність</label>
+                <select class="f-select" id="f-stock">
+                    <option value="1">В наявності</option>
+                    <option value="0">Немає</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- IMAGES -->
+        <div class="f-group">
+            <label class="f-label">Фотографії товару (до 6 штук)</label>
+            <div class="img-drop-zone" id="drop-zone">
+                <input type="file" id="img-file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+                <div class="img-drop-icon">📁</div>
+                <div class="img-drop-text"><strong>Натисніть або перетягніть фото сюди</strong></div>
+                <div class="img-drop-hint">JPG, PNG, WEBP · до 5 МБ кожне</div>
+            </div>
+            <div id="img-uploading" class="img-uploading" style="display:none">
+                <div class="spinner" style="width:16px;height:16px;margin:0"></div>
+                Завантаження фото…
+            </div>
+            <div class="img-grid" id="img-grid"></div>
+            <p class="f-hint" style="margin-top:8px">⭐ Перше фото — головне (обкладинка). Перетягуйте щоб змінити порядок. Натисніть «⭐ Головне» на будь-якому фото щоб зробити його першим.</p>
+        </div>
+
+        <div class="f-group">
+            <label class="f-label">Короткий опис</label>
+            <input type="text" class="f-input" id="f-short-desc" placeholder="Одне речення — для картки в каталозі">
+        </div>
+
+        <div class="f-group">
+            <label class="f-label">Повний опис</label>
+            <textarea class="f-textarea" id="f-desc" style="min-height:120px" placeholder="Детальний опис — відображається на сторінці товару"></textarea>
+        </div>
+
+        <div class="f-group">
+            <label class="f-label">Характеристики</label>
+            <div class="specs-list" id="specs-list"></div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addSpec()">+ Додати рядок</button>
+        </div>
+
+        <div class="f-group">
+            <label class="f-label">Фічі / переваги (через кому)</label>
+            <input type="text" class="f-input" id="f-features" placeholder="Ручна робота, Безпечно для їжі, Гравіювання на замовлення">
+            <p class="f-hint">Відображаються як теги під характеристиками</p>
+        </div>
+
+        <div class="modal__foot">
+            <button class="btn btn-ghost" onclick="previewProduct()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Прев'ю
+            </button>
+            <button class="btn btn-ghost" onclick="closeModal('product-modal')">Скасувати</button>
+            <button class="btn btn-primary" onclick="saveProduct()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Зберегти
+            </button>
         </div>
     </div>
 </div>
 
-<div id="toast"></div>
+<!-- PREVIEW OVERLAY -->
+<div class="preview-overlay" id="preview-overlay">
+    <div class="preview-bar">
+        <div class="preview-bar__label">
+            <span>Прев'ю</span>
+            Так виглядатиме сторінка товару на сайті
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="closePreview()">✕ Закрити</button>
+    </div>
+    <div class="preview-content" id="preview-content"></div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+        <div class="confirm-box__title" id="confirm-title">Видалити?</div>
+        <div class="confirm-box__sub" id="confirm-sub">Це не можна скасувати.</div>
+        <div class="confirm-box__btns">
+            <button class="btn btn-ghost" onclick="closeConfirm()">Скасувати</button>
+            <button class="btn btn-danger" id="confirm-ok">Видалити</button>
+        </div>
+    </div>
+</div>
+
+<div class="wc-toast" id="wc-toast"></div>
 
 <script>
-    const API = 'admin.php';
-    let token = localStorage.getItem('wc_token') || '';
-    let products = [], orders = [];
+    const API = './admin.php';
+    let token    = sessionStorage.getItem('wc_token') || '';
+    let products = [];
+    let images   = []; // [{url, filename}]
 
-    window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('pw').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
-        if (token) verifyAndEnter();
+    document.addEventListener('DOMContentLoaded', () => {
+        if (token) showApp();
+        document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+        initDrop();
     });
 
-    async function verifyAndEnter() {
-        try { const r = await api('get_products', {}, true); if (r.ok) enterApp(); }
-        catch { token = ''; localStorage.removeItem('wc_token'); }
-    }
-
+    // ── AUTH ──────────────────────────────────
     async function doLogin() {
-        const pw = document.getElementById('pw').value.trim();
+        const pass = document.getElementById('login-pass').value.trim();
+        if (!pass) return;
         try {
-            const r = await api('login', { password: pw }, true);
-            token = r.token; localStorage.setItem('wc_token', token); enterApp();
-        } catch (e) { document.getElementById('login-err').textContent = e.message || 'Невірний пароль'; }
+            const r = await req('login', {password: pass});
+            token = r.token;
+            sessionStorage.setItem('wc_token', token);
+            document.getElementById('login-err').style.display = 'none';
+            showApp();
+        } catch { document.getElementById('login-err').style.display = 'block'; }
     }
-
-    function enterApp() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
+    function doLogout() {
+        token = ''; sessionStorage.removeItem('wc_token');
+        document.getElementById('screen-app').style.display = 'none';
+        document.getElementById('screen-login').style.display = 'flex';
+        document.getElementById('login-pass').value = '';
+    }
+    function showApp() {
+        document.getElementById('screen-login').style.display = 'none';
+        document.getElementById('screen-app').style.display = 'flex';
         loadProducts(); loadOrders();
     }
 
-    function logout() { token = ''; localStorage.removeItem('wc_token'); location.reload(); }
-
-    function nav(el) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('panel-' + el.dataset.p).classList.add('active');
+    // ── TABS ──────────────────────────────────
+    function switchTab(name) {
+        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('tab-'+name).classList.add('active');
+        document.getElementById('nav-'+name).classList.add('active');
     }
 
+    // ── PRODUCTS ─────────────────────────────
     async function loadProducts() {
         try {
-            const r = await api('get_products', {}, true);
+            const r = await req('get_products');
             products = r.products || [];
             renderProducts();
-        } catch (e) { document.getElementById('products-table').innerHTML = `<div class="empty">${e.message}</div>`; }
-    }
-
-    function getProductImageSrc(p) {
-        const imgPath = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
-        if (!imgPath) return '';
-        if (imgPath.startsWith('http')) return imgPath;
-        return '../' + imgPath.replace(/^\.\//, '');
+        } catch(e) {
+            document.getElementById('products-content').innerHTML =
+                `<div class="empty"><div class="empty__icon">⚠️</div>${e.message}</div>`;
+        }
     }
 
     function renderProducts() {
-        const instock = products.filter(p => p.in_stock).length;
-        document.getElementById('ps-total').textContent = products.length;
-        document.getElementById('ps-instock').textContent = instock;
-        document.getElementById('ps-out').textContent = products.length - instock;
-        document.getElementById('ps-cats').textContent = [...new Set(products.map(p => p.category).filter(Boolean))].length;
-
+        const inStock = products.filter(p=>p.in_stock).length;
+        document.getElementById('products-sub').textContent = `${products.length} товарів · ${inStock} в наявності`;
         if (!products.length) {
-            document.getElementById('products-table').innerHTML = '<div class="empty">Товарів ще немає.</div>'; return;
+            document.getElementById('products-content').innerHTML =
+                `<div class="empty"><div class="empty__icon">📦</div>Товарів ще немає. Додайте перший!</div>`;
+            return;
         }
-
-        const rows = products.map(p => {
-            const imgSrc = getProductImageSrc(p);
-            return `
-            <tr>
-              <td>
-                ${imgSrc ? `<img src="${imgSrc}" class="prod-img">` : `<div class="prod-img-ph">🪵</div>`}
-              </td>
-              <td>
-                <div class="prod-name">${esc(p.name)}</div>
-                <div class="prod-cat">${esc(p.category)}</div>
-              </td>
-              <td class="price-cell">
-                ${fmt(p.price)} ₴
-                ${p.old_price ? `<span class="old-price">${fmt(p.old_price)} ₴</span>` : ''}
-              </td>
-              <td><span class="badge ${p.in_stock ? 'badge-instock' : 'badge-outstock'}">${p.in_stock ? 'В наявності' : 'Немає'}</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="btn btn-ghost btn-sm" onclick='openProductModal(${JSON.stringify(p).replace(/'/g, "&#39;")})'>✏️</button>
-                  <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">✕</button>
-                </div>
-              </td>
-            </tr>`;
-        }).join('');
-
-        document.getElementById('products-table').innerHTML = `<table><thead><tr><th style="width:56px"></th><th>Товар</th><th>Ціна</th><th>Статус</th><th>Дії</th></tr></thead><tbody>${rows}</tbody></table>`;
+        document.getElementById('products-content').innerHTML = `
+    <div class="prod-table-wrap">
+      <table class="prod-table">
+        <thead><tr><th>Фото</th><th>Назва</th><th>Ціна</th><th>Наявність</th><th>Дії</th></tr></thead>
+        <tbody>${products.map(p=>{
+            const img = (p.images&&p.images[0])||p.image||'';
+            return `<tr>
+            <td>${img?`<img class="prod-thumb" src="${x(toDisplaySrc(img))}" onerror="this.style.display='none'">`:`<div class="prod-thumb-ph">🪵</div>`}</td>
+            <td><div class="prod-name">${x(p.name)}</div><div class="prod-cat">${x(p.category||'—')}</div></td>
+            <td>
+              <div style="font-weight:600;color:var(--gold)">${n(p.price)} ₴</div>
+              ${p.old_price?`<div style="font-size:12px;color:var(--muted);text-decoration:line-through">${n(p.old_price)} ₴</div>`:''}
+            </td>
+            <td><span class="badge ${p.in_stock?'badge-green':'badge-red'}">${p.in_stock?'В наявності':'Немає'}</span></td>
+            <td><div class="td-actions">
+              <button class="btn btn-ghost btn-sm" onclick="openProductModal('${p.id}')">Редагувати</button>
+              <button class="btn btn-ghost btn-sm" onclick="previewById('${p.id}')">Прев'ю</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDelete('${p.id}','${x(p.name)}')">Видалити</button>
+            </div></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
     }
 
-    function addCharRow(key = '', val = '') {
-        const div = document.createElement('div');
-        div.className = 'char-row';
-        div.innerHTML = `
-            <input type="text" placeholder="Назва (напр. Розмір)" value="${esc(key)}" style="flex:1">
-            <input type="text" placeholder="Значення (напр. 35 x 20 см)" value="${esc(val)}" style="flex:2">
-            <button class="btn btn-danger btn-icon" onclick="this.parentElement.remove()" style="padding: 0 10px;">✕</button>
-        `;
-        document.getElementById('chars-list').appendChild(div);
-    }
-
-    function openProductModal(p = null) {
-        document.getElementById('modal-title').textContent = p ? 'Редагувати товар' : 'Новий товар';
-        document.getElementById('edit-id').value = p?.id || '';
-        document.getElementById('f-name').value = p?.name || '';
-        document.getElementById('f-price').value = p?.price || '';
-        document.getElementById('f-old-price').value = p?.old_price || '';
-        document.getElementById('f-cat').value = p?.category || '';
-        document.getElementById('f-desc').value = p?.description || '';
-
-        const imgPath = (p?.images && p.images[0]) ? p.images[0] : (p?.image || '');
-        document.getElementById('f-img').value = imgPath;
-        document.getElementById('f-stock').checked = p ? p.in_stock : true;
-
-        const tags = p?.features || p?.tags || [];
-        document.getElementById('f-tags').value = tags.join(', ');
-
-        const clist = document.getElementById('chars-list');
-        clist.innerHTML = '';
-        const specs = p?.specs || p?.characteristics;
-        if (specs && Object.keys(specs).length > 0) {
-            Object.entries(specs).forEach(([k, v]) => addCharRow(k, v));
-        } else if (!p) {
-            addCharRow('Розмір', '');
-            addCharRow('Матеріал', 'Волоський горіх');
-            addCharRow('Покриття', 'Лляна олія + бджолиний віск');
-            addCharRow('Вага', '');
-            addCharRow('Виготовлення', '5-7 робочих днів');
-        }
-
-        if (imgPath) {
-            const fullSrc = imgPath.startsWith('http') ? imgPath : '../' + imgPath.replace(/^\.\//, '');
-            showExistingImage(fullSrc);
+    function openProductModal(id=null) {
+        clearForm();
+        if (id) {
+            const p = products.find(v=>v.id===id);
+            if (!p) return;
+            document.getElementById('modal-title').textContent = 'Редагувати товар';
+            document.getElementById('f-id').value         = p.id;
+            document.getElementById('f-name').value        = p.name||'';
+            document.getElementById('f-category').value    = p.category||'';
+            document.getElementById('f-price').value       = p.price||'';
+            document.getElementById('f-old-price').value   = p.old_price||'';
+            document.getElementById('f-stock').value       = p.in_stock?'1':'0';
+            document.getElementById('f-short-desc').value  = p.short_desc||'';
+            document.getElementById('f-desc').value        = p.description||'';
+            document.getElementById('f-features').value    = (p.features||[]).join(', ');
+            Object.entries(p.specs||{}).forEach(([k,v])=>addSpec(k,v));
+            const imgs = p.images?.length ? p.images : (p.image?[p.image]:[]);
+            images = imgs.map(url=>({url, filename:url.split('/').pop()}));
+            renderImgGrid();
         } else {
-            resetUploadZone();
+            document.getElementById('modal-title').textContent = 'Новий товар';
         }
+        openModal('product-modal');
+    }
 
-        document.getElementById('prod-modal').classList.add('open');
+    function clearForm() {
+        ['f-id','f-name','f-category','f-price','f-old-price','f-short-desc','f-desc','f-features']
+            .forEach(id=>document.getElementById(id).value='');
+        document.getElementById('f-stock').value='1';
+        document.getElementById('specs-list').innerHTML='';
+        images=[]; renderImgGrid();
     }
 
     async function saveProduct() {
-        const name = document.getElementById('f-name').value.trim();
-        const price = parseFloat(document.getElementById('f-price').value);
-        if (!name || isNaN(price)) { toast('Введіть назву та ціну товару', 'err'); return; }
+        const name  = document.getElementById('f-name').value.trim();
+        const price = parseFloat(document.getElementById('f-price').value)||0;
+        if (!name)  { toast('Введіть назву','err'); return; }
+        if (!price) { toast('Введіть ціну','err'); return; }
 
-        const characteristics = {};
-        document.querySelectorAll('#chars-list .char-row').forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            const k = inputs[0].value.trim();
-            const v = inputs[1].value.trim();
-            if (k) characteristics[k] = v;
+        const specs={};
+        document.querySelectorAll('.spec-row').forEach(r=>{
+            const k=r.querySelector('.spec-key').value.trim();
+            const v=r.querySelector('.spec-val').value.trim();
+            if(k) specs[k]=v;
         });
 
-        const tags = document.getElementById('f-tags').value
-            .split(',')
-            .map(t => t.trim())
-            .filter(t => t.length > 0);
+        const features = document.getElementById('f-features').value
+            .split(',').map(f=>f.trim()).filter(Boolean);
+        const imgs = images.map(i=>i.url);
+
+        const body={
+            id:          document.getElementById('f-id').value||null,
+            name, category: document.getElementById('f-category').value.trim(),
+            price, old_price: parseFloat(document.getElementById('f-old-price').value)||null,
+            in_stock:    document.getElementById('f-stock').value==='1',
+            short_desc:  document.getElementById('f-short-desc').value.trim(),
+            description: document.getElementById('f-desc').value.trim(),
+            image:       imgs[0]||'', images:imgs,
+            specs, features, token,
+        };
 
         try {
-            await api('save_product', {
-                token,
-                id: document.getElementById('edit-id').value || undefined,
-                name,
-                price,
-                old_price: parseFloat(document.getElementById('f-old-price').value) || 0,
-                category: document.getElementById('f-cat').value.trim(),
-                description: document.getElementById('f-desc').value.trim(),
-                image: document.getElementById('f-img').value.trim(),
-                in_stock: document.getElementById('f-stock').checked,
-                characteristics,
-                tags
-            });
-            closeModal('prod-modal');
-            toast('Збережено успішно', 'ok');
-            loadProducts();
-        } catch (e) { toast(e.message, 'err'); }
+            await req('save_product', body);
+            closeModal('product-modal');
+            toast(body.id?'Збережено!':'Товар додано!');
+            await loadProducts();
+        } catch(e) { toast(e.message,'err'); }
     }
 
+    function confirmDelete(id,name) {
+        document.getElementById('confirm-title').textContent=`Видалити "${name}"?`;
+        document.getElementById('confirm-sub').textContent='Товар буде видалено назавжди.';
+        document.getElementById('confirm-ok').onclick=()=>deleteProduct(id);
+        document.getElementById('confirm-overlay').classList.add('open');
+    }
     async function deleteProduct(id) {
-        if (!confirm('Видалити товар?')) return;
-        try { await api('delete_product', { token, id }); loadProducts(); } catch (e) { toast(e.message, 'err'); }
+        closeConfirm();
+        try { await req('delete_product',{id,token}); toast('Видалено'); await loadProducts(); }
+        catch(e){toast(e.message,'err');}
     }
 
-    async function loadOrders() { }
-
-    function handleFileSelect(file) {
-        if (!file) return;
-        uploadToAPI(file);
+    function addSpec(key='',val='') {
+        const list=document.getElementById('specs-list');
+        const row=document.createElement('div');
+        row.className='spec-row';
+        row.innerHTML=`
+    <input type="text" class="f-input spec-key" placeholder="Назва (Розмір)" value="${x(key)}">
+    <input type="text" class="f-input spec-val" placeholder="Значення (35×20 см)" value="${x(val)}">
+    <button type="button" class="spec-del" onclick="this.parentElement.remove()">✕</button>`;
+        list.appendChild(row);
     }
 
-    async function uploadToAPI(file) {
-        const fd = new FormData();
-        fd.append('token', token);
-        fd.append('image', file);
+    // ── IMAGES ───────────────────────────────
+    function initDrop() {
+        const zone=document.getElementById('drop-zone');
+        zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+        zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+        zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');handleFiles(e.dataTransfer.files);});
+    }
+
+    async function handleFiles(fileList) {
+        const files=Array.from(fileList).filter(f=>f.type.startsWith('image/'));
+        if (!files.length) return;
+        if (images.length+files.length>6) { toast('Максимум 6 фото','err'); return; }
+        document.getElementById('img-uploading').style.display='flex';
+        for (const file of files) {
+            try {
+                const path = await uploadFile(file); // 'images/product/xxx.jpg'
+                images.push({ url: path }); // зберігаємо оригінальний шлях для JSON
+            } catch(e) { toast('Помилка: '+e.message,'err'); }
+        }
+        document.getElementById('img-uploading').style.display='none';
+        renderImgGrid();
+    }
+
+    async function uploadFile(file) {
+        const fd=new FormData();
+        fd.append('image',file);
+        fd.append('token',token);
+        const res=await fetch(API+'?action=upload_image',{method:'POST',body:fd});
+        const data=await res.json();
+        if (!data.ok) throw new Error(data.error||'Помилка');
+        // data.path = 'images/product/filename.png' (відносно кореня сайту)
+        // Адмінка в папці admin/, тому для відображення додаємо ../
+        // Але зберігаємо оригінальний шлях у JSON щоб сайт читав правильно
+        return data.path; // зберігаємо як є (без ../)
+    }
+
+    // Конвертує шлях з JSON у src для відображення в адмінці
+    // JSON: 'images/product/x.jpg' → відображення: '../images/product/x.jpg'
+    function toDisplaySrc(path) {
+        if (!path) return '';
+        // Якщо вже абсолютний URL або data: — не чіпаємо
+        if (path.startsWith('http') || path.startsWith('data:') || path.startsWith('/')) return path;
+        // Якщо починається з ../ — вже правильно
+        if (path.startsWith('../')) return path;
+        // Відносний шлях від кореня — додаємо ../
+        return '../' + path;
+    }
+
+    function renderImgGrid() {
+        const grid=document.getElementById('img-grid');
+        if (!images.length) { grid.innerHTML=''; return; }
+        grid.innerHTML=images.map((img,i)=>`
+    <div class="img-item ${i===0?'is-main':''}"
+         draggable="true" data-idx="${i}"
+         ondragstart="iDragStart(event,${i})"
+         ondragover="iDragOver(event,${i})"
+         ondrop="iDrop(event,${i})"
+         ondragend="iDragEnd()">
+      <img src="${x(toDisplaySrc(img.url))}" alt="">
+      <button class="img-item__star" onclick="setMain(${i})">⭐ Головне</button>
+      <div class="img-item__badge">⭐ Головне</div>
+      <button class="img-item__del" onclick="removeImg(${i})">✕</button>
+    </div>`).join('');
+    }
+
+    function setMain(idx) {
+        const [item]=images.splice(idx,1);
+        images.unshift(item);
+        renderImgGrid();
+    }
+    function removeImg(idx) { images.splice(idx,1); renderImgGrid(); }
+
+    let _di=null;
+    function iDragStart(e,i){_di=i;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+    function iDragOver(e,i){e.preventDefault();document.querySelectorAll('.img-item').forEach(el=>el.classList.remove('drag-target'));if(i!==_di)e.currentTarget.classList.add('drag-target');}
+    function iDrop(e,i){e.preventDefault();if(_di===null||_di===i)return;const[m]=images.splice(_di,1);images.splice(i,0,m);_di=null;renderImgGrid();}
+    function iDragEnd(){_di=null;document.querySelectorAll('.img-item').forEach(el=>el.classList.remove('dragging','drag-target'));}
+
+    // ── PREVIEW ──────────────────────────────
+    function getFormData() {
+        const specs={};
+        document.querySelectorAll('.spec-row').forEach(r=>{
+            const k=r.querySelector('.spec-key').value.trim();
+            const v=r.querySelector('.spec-val').value.trim();
+            if(k) specs[k]=v;
+        });
+        return {
+            name:        document.getElementById('f-name').value||'Назва товару',
+            price:       parseFloat(document.getElementById('f-price').value)||0,
+            old_price:   parseFloat(document.getElementById('f-old-price').value)||null,
+            in_stock:    document.getElementById('f-stock').value==='1',
+            description: document.getElementById('f-desc').value,
+            features:    document.getElementById('f-features').value.split(',').map(f=>f.trim()).filter(Boolean),
+            images:      images.map(i=>i.url),
+            specs,
+        };
+    }
+
+    function previewProduct() { renderPreview(getFormData()); }
+    function previewById(id) { const p=products.find(v=>v.id===id); if(p) renderPreview(p); }
+
+    function renderPreview(p) {
+        const imgs = p.images?.length ? p.images : (p.image?[p.image]:[]);
+        const dsrcs = imgs.map(s => toDisplaySrc(s)); // конвертуємо для відображення
+        document.getElementById('preview-content').innerHTML=`
+    <div class="pv-single">
+      <div>
+        <div class="pv-gallery__main">
+          ${dsrcs[0]
+            ? `<img id="pv-main" src="${x(dsrcs[0])}" alt="${x(p.name)}" style="width:100%;height:100%;object-fit:cover">`
+            : `<div class="pv-gallery__main-ph">🪵</div>`}
+        </div>
+        ${dsrcs.length>1?`<div class="pv-thumbs">${dsrcs.map((s,i)=>`
+          <div class="pv-thumb ${i===0?'active':''}" onclick="pvThumb(this,'${x(s)}')">
+            <img src="${x(s)}" alt="">
+          </div>`).join('')}</div>`:''}
+      </div>
+      <div>
+        <div class="pv-info__title">${x(p.name)}</div>
+        <div class="pv-info__meta">
+          <span class="pv-price">${n(p.price)} ₴</span>
+          ${p.old_price?`<span class="pv-old-price">${n(p.old_price)} ₴</span>`:''}
+          <span class="pv-status-badge">${p.in_stock?'В наявності':'Немає в наявності'}</span>
+        </div>
+        <hr class="pv-divider">
+        <div class="pv-purchase">
+          <div class="pv-qty">
+            <button class="pv-qty-btn">−</button>
+            <input class="pv-qty-input" type="number" value="1" min="1">
+            <button class="pv-qty-btn">+</button>
+          </div>
+          <button class="pv-btn-buy">Купити в 1 клік</button>
+          <button class="pv-btn-cart">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            В кошик
+          </button>
+        </div>
+        <hr class="pv-divider">
+        ${p.description?`<div><div class="pv-desc-title">Опис</div><p class="pv-desc-text">${x(p.description)}</p></div>`:''}
+        ${Object.keys(p.specs||{}).length?`
+          <div class="pv-specs">
+            <div class="pv-desc-title" style="margin-top:20px">Характеристики</div>
+            <table class="pv-specs-table">${Object.entries(p.specs).map(([k,v])=>`
+              <tr><td>${x(k)}</td><td>${x(v)}</td></tr>`).join('')}
+            </table>
+          </div>`:''}
+        ${(p.features||[]).length?`
+          <div class="pv-features">${p.features.map(f=>`<span class="pv-feature">✓ ${x(f)}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`;
+        document.getElementById('preview-overlay').classList.add('open');
+        document.body.style.overflow='hidden';
+    }
+
+    function pvThumb(el,src) {
+        const m=document.getElementById('pv-main');
+        if(m) m.src=src;
+        document.querySelectorAll('.pv-thumb').forEach(t=>t.classList.remove('active'));
+        el.classList.add('active');
+    }
+    function closePreview() {
+        document.getElementById('preview-overlay').classList.remove('open');
+        document.body.style.overflow='';
+    }
+
+    // ── ORDERS ───────────────────────────────
+    const SL={new:'Нове',processing:'Обробляється',shipped:'Відправлено',done:'Виконано',cancelled:'Скасовано'};
+
+    async function loadOrders() {
         try {
-            toast('Завантаження фото...', 'ok');
-            const res = await fetch(`${API}?action=upload_image`, { method: 'POST', body: fd });
-            const data = await res.json();
-            if(data.ok) {
-                document.getElementById('f-img').value = data.path;
-                showExistingImage('../' + data.path.replace(/^\.\//, ''));
-                toast('Фото завантажено', 'ok');
-            } else {
-                toast(data.error || 'Помилка завантаження', 'err');
-            }
-        } catch (e) { toast('Помилка завантаження фото', 'err'); }
+            const r=await req('get_orders',null,'GET',true);
+            renderOrders(r.orders||[]);
+        } catch {}
     }
 
-    function removeUploadedImage(e) {
-        e.stopPropagation(); resetUploadZone();
-    }
-    function resetUploadZone() {
-        document.getElementById('upload-placeholder').style.display = 'block';
-        document.getElementById('upload-preview').style.display = 'none';
-        document.getElementById('f-img').value = '';
-        document.getElementById('f-file').value = '';
-    }
-    function showExistingImage(url) {
-        if (!url) { resetUploadZone(); return; }
-        document.getElementById('upload-preview-img').src = url;
-        document.getElementById('upload-placeholder').style.display = 'none';
-        document.getElementById('upload-preview').style.display = 'block';
+    function renderOrders(orders) {
+        const nc=orders.filter(o=>o.status==='new').length;
+        document.getElementById('orders-sub').textContent=`${orders.length} замовлень · ${nc} нових`;
+        const b=document.getElementById('orders-badge');
+        b.textContent=nc||''; b.style.display=nc?'inline':'none';
+        if (!orders.length) {
+            document.getElementById('orders-content').innerHTML=
+                `<div class="empty"><div class="empty__icon">🛒</div>Замовлень ще немає</div>`;
+            return;
+        }
+        document.getElementById('orders-content').innerHTML=orders.map(o=>`
+    <div class="order-card">
+      <div class="order-card__hdr">
+        <div>
+          <div class="order-id">#${x(o.id)}</div>
+          <div class="order-name">${x(o.name)}</div>
+          <div class="order-phone">${x(o.phone)}</div>
+          ${o.message?`<div style="font-size:12px;color:var(--muted);margin-top:4px;max-width:420px">${x(o.message)}</div>`:''}
+        </div>
+        <span class="badge ${sc(o.status)}">${SL[o.status]||o.status}</span>
+      </div>
+      <div>${(o.cart||[]).map(i=>`<div class="order-item"><span>${x(i.name)} × ${i.qty}</span><span>${n(i.price*i.qty)} ₴</span></div>`).join('')}</div>
+      <div class="order-total">Разом: ${n(o.total)} ₴</div>
+      <div class="order-foot">
+        <span class="order-date">${fd(o.date)}</span>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select class="order-status-sel" onchange="updateOrder('${o.id}',this.value)">
+            ${Object.entries(SL).map(([v,l])=>`<option value="${v}"${o.status===v?' selected':''}>${l}</option>`).join('')}
+          </select>
+          <button class="btn btn-danger btn-sm" onclick="confirmDeleteOrder('${o.id}')">Видалити</button>
+        </div>
+      </div>
+    </div>`).join('');
     }
 
-    function uploadDragOver(e) { e.preventDefault(); }
-    function uploadDragLeave(e) {}
-    function uploadDrop(e) { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0]); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-    document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
-
-    async function api(action, body = {}, skipAuth = false) {
-        if (!skipAuth && !token) throw new Error('Не авторизовано');
-        const res = await fetch(`${API}?action=${action}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, action }) });
-        const data = await res.json(); if (!data.ok) throw new Error(data.error || 'Помилка'); return data;
+    async function updateOrder(id,status) {
+        try { await req('update_order',{id,status,token}); toast('Статус оновлено'); await loadOrders(); }
+        catch(e){toast(e.message,'err');}
     }
-    function esc(s = '') { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    function fmt(n) { return Number(n || 0).toLocaleString('uk-UA'); }
-    let _tt; function toast(msg, type = 'ok') {
-        const el = document.getElementById('toast'); el.textContent = (type === 'ok' ? '✓ ' : '✕ ') + msg; el.className = `show ${type}`;
-        clearTimeout(_tt); _tt = setTimeout(() => el.classList.remove('show'), 3000);
+    function confirmDeleteOrder(id) {
+        document.getElementById('confirm-title').textContent='Видалити замовлення?';
+        document.getElementById('confirm-sub').textContent='Замовлення буде видалено назавжди.';
+        document.getElementById('confirm-ok').onclick=()=>deleteOrder(id);
+        document.getElementById('confirm-overlay').classList.add('open');
+    }
+    async function deleteOrder(id) {
+        closeConfirm();
+        try { await req('delete_order',{id,token}); toast('Видалено'); await loadOrders(); }
+        catch(e){toast(e.message,'err');}
+    }
+
+    // ── API ───────────────────────────────────
+    async function req(action, body=null, method='POST', withToken=false) {
+        let url=API+'?action='+action;
+        if(withToken&&token) url+='&token='+token;
+        const opts={method};
+        if(body){opts.headers={'Content-Type':'application/json'};opts.body=JSON.stringify(body);}
+        const res=await fetch(url,opts);
+        const data=await res.json();
+        if(!data.ok) throw new Error(data.error||'Помилка сервера');
+        return data;
+    }
+
+    // ── MODAL HELPERS ─────────────────────────
+    function openModal(id){document.getElementById(id).classList.add('open');}
+    function closeModal(id){document.getElementById(id).classList.remove('open');}
+    function closeOnOverlay(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+    function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('open');}
+
+    document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){closeModal('product-modal');closeConfirm();closePreview();}
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+            if(document.getElementById('product-modal').classList.contains('open')) saveProduct();
+        }
+    });
+
+    // ── UTILS ─────────────────────────────────
+    function x(s=''){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function n(v){return Number(v||0).toLocaleString('uk-UA');}
+    function fd(s){if(!s)return'—';const d=new Date(s);return isNaN(d)?s:d.toLocaleString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+    function sc(s){return{new:'status-new',processing:'status-processing',shipped:'status-shipped',done:'status-done',cancelled:'status-cancelled'}[s]||'';}
+
+    let _tt;
+    function toast(msg,type='ok'){
+        const t=document.getElementById('wc-toast');
+        t.textContent=msg; t.className=`wc-toast show ${type}`;
+        clearTimeout(_tt); _tt=setTimeout(()=>t.className='wc-toast',3000);
     }
 </script>
 </body>

@@ -25,12 +25,13 @@
     </nav>
 
     <div class="header__cart">
-        <h2>Кошик</h2>
-        <div id="cart-items"></div>
-        <p>Разом: <span id="total-price">0</span> грн</p>
-        <button id="clear-cart">Очистити кошик</button>
+        <a href="cart.html" class="header__cart-link" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+            <span>Кошик 🛒</span>
+            <span class="cart-count" style="display: none; background: #ff4500; color: #fff; padding: 2px 6px; border-radius: 50%; font-size: 12px;">0</span>
+        </a>
     </div>
 </header>
+
 
 <!-- Головний контейнер сторінки замовлення -->
 <main class="order-page">
@@ -49,26 +50,10 @@
                     <h2 class="order-form__subtitle">1. Ваші контакти</h2>
                     <div class="order-form__row">
                         <input type="text" class="order-form__input" placeholder="Ім'я" required>
-                        <input type="text" class="order-form__input" placeholder="Прізвище" required>
                     </div>
                     <div class="order-form__row">
                         <input type="tel" class="order-form__input" placeholder="Телефон" required>
-                        <input type="email" class="order-form__input" placeholder="Email (необов'язково)">
                     </div>
-                </div>
-
-                <!-- Блок 2: Доставка -->
-                <div class="order-form__section">
-                    <h2 class="order-form__subtitle">2. Доставка</h2>
-                    <select class="order-form__input order-form__select" required>
-                        <option value="" disabled selected hidden>Оберіть спосіб доставки</option>
-                        <option value="nova_poshta">Нова Пошта (У відділення)</option>
-                        <option value="nova_poshta_courier">Нова Пошта (Адресна доставка)</option>
-                        <option value="ukr_poshta">Укрпошта</option>
-                        <option value="samovyviz">Самовивіз</option>
-                    </select>
-                    <input type="text" class="order-form__input" placeholder="Місто / Населений пункт" required>
-                    <input type="text" class="order-form__input" placeholder="№ Відділення або адреса" required>
                 </div>
 
                 <!-- Блок 3: Оплата -->

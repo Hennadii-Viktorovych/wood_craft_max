@@ -1,229 +1,249 @@
+/**
+ * js/product.js — WoodCraft UA
+ * Сумісний з вашим cart.js
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
+    document.body.style.overflow = '';
+
     const titleEl = document.querySelector('.product-info__title');
     if (!titleEl) return;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+    const productId = new URLSearchParams(location.search).get('id');
+    if (!productId) { showNotFound('ID товару не вказано.'); return; }
 
     let products = [];
 
-    // 1. Пробуємо отримати дані через admin.php (якщо працює PHP-сервер)
-    const adminPaths = [
-        '../admin/admin.php?action=get_products',
-        './admin/admin.php?action=get_products',
-        '/wood_craft_max/admin/admin.php?action=get_products'
-    ];
+    // Спроба 1: PHP
+    try {
+        const res  = await fetchT('./admin/admin.php?action=get_products', 3000);
+        const data = await res.json();
+        products   = normalizeProducts(data);
+    } catch(e) {}
 
-    for (const path of adminPaths) {
+    // Спроба 2: JSON
+    if (!products.length) {
         try {
-            const res = await fetch(path);
-            if (res.ok) {
-                const data = await res.json();
-                if (data && typeof data === 'object' && !Array.isArray(data)) {
-                    products = Object.values(data);
-                } else if (Array.isArray(data)) {
-                    products = data;
-                } else if (data.products && Array.isArray(data.products)) {
-                    products = data.products;
-                }
-                if (products.length > 0) break;
-            }
-        } catch (e) {}
+            const res  = await fetchT('./json/product.json', 3000);
+            const data = await res.json();
+            products   = normalizeProducts(data);
+        } catch(e) {}
     }
 
-    // 2. Якщо через адмінку не вийшло (GitHub Pages), читаємо напряму з json/product.json
-    if (products.length === 0) {
-        const jsonPaths = [
-            '../json/product.json',
-            './json/product.json',
-            '/wood_craft_max/json/product.json'
-        ];
+    if (!products.length) { showNotFound('Не вдалося завантажити товари.'); return; }
 
-        for (const path of jsonPaths) {
-            try {
-                const res = await fetch(path);
-                if (res.ok) {
-                    const data = await res.json();
+    const product = products.find(p => String(p.id).trim() === productId.trim());
+    if (!product) { showNotFound('Товар не знайдено.'); return; }
 
-                    if (data && typeof data === 'object' && !Array.isArray(data)) {
-                        products = Object.values(data);
-                    } else if (Array.isArray(data)) {
-                        products = data;
-                    } else if (data.products && Array.isArray(data.products)) {
-                        products = data.products;
-                    } else if (data.data && Array.isArray(data.data)) {
-                        products = data.data;
-                    }
+    // ── Заповнити сторінку ──────────────────────────────
+    document.title = (product.name || 'Товар') + ' — WoodCraft';
 
-                    if (products.length > 0) break;
-                }
-            } catch (err) {}
-        }
-    }
-
-    let product = null;
-    if (products.length > 0) {
-        if (productId) {
-            const cleanId = productId.trim();
-            product = products.find(p => String(p.id).trim() === cleanId) ||
-                products.find(p => String(p.id).includes(cleanId) || cleanId.includes(String(p.id)));
-        }
-        if (!product) {
-            product = products[0];
-        }
-    }
-
-    if (!product) {
-        const placeholder = document.getElementById('gallery-placeholder');
-        if (placeholder) placeholder.textContent = 'Товар не знайдено в базі даних';
-        return;
-    }
-
-    // 3. Заповнюємо інформацію про товар
     titleEl.textContent = product.name || 'Без назви';
 
     const priceEl = document.querySelector('.product-info__price');
-    if (priceEl) priceEl.textContent = `${product.price || 0} ₴`;
+    if (priceEl) {
+        priceEl.textContent = fmtNum(product.price) + ' ₴';
+        if (product.old_price) {
+            priceEl.insertAdjacentHTML('afterend',
+                `<span style="text-decoration:line-through;color:#7a7060;font-size:.75em;margin-left:10px">
+                    ${fmtNum(product.old_price)} ₴
+                 </span>`);
+        }
+    }
 
     const statusEl = document.querySelector('.product-info__status');
     if (statusEl) {
-        statusEl.textContent = product.in_stock !== false ? 'В наявності' : 'Немає в наявності';
+        const inStock = product.in_stock !== false;
+        statusEl.textContent = inStock ? 'В наявності' : 'Немає в наявності';
+        statusEl.style.color = inStock ? '#78a75a' : '#a75a5a';
     }
 
-    const descTextEl = document.querySelector('.product-description__text');
-    if (descTextEl) {
-        descTextEl.innerHTML = product.description ? product.description.replace(/\n/g, '<br>') : 'Опис відсутній.';
+    const descEl = document.querySelector('.product-description__text');
+    if (descEl) {
+        descEl.innerHTML = product.description
+            ? product.description.replace(/\n/g, '<br>')
+            : 'Опис відсутній.';
     }
 
-    // 4. Характеристики
-    const specTable = document.querySelector('.characteristics-table') || document.querySelector('.product-specs');
-    if (product.specs && typeof product.specs === 'object' && Object.keys(product.specs).length > 0) {
-        let specsHtml = '';
-        for (const [key, value] of Object.entries(product.specs)) {
-            specsHtml += `
-                <div class="product-char-row" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <span style="color: #7a7060;">${key}</span>
-                    <span style="color: #e8e0d4; font-weight: 500;">${value}</span>
-                </div>`;
-        }
+    // Характеристики
+    if (product.specs && Object.keys(product.specs).length) {
+        const specsHtml = Object.entries(product.specs).map(([k,v]) => `
+            <div style="display:flex;justify-content:space-between;
+                        padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+                <span style="color:#7a7060;font-size:13px">${esc(k)}</span>
+                <span style="font-weight:500;font-size:13px">${esc(v)}</span>
+            </div>`).join('');
+        const specTable = document.querySelector('.product-specs,.characteristics-table');
         if (specTable) {
             specTable.innerHTML = specsHtml;
         } else {
             const descBlock = document.querySelector('.product-description');
-            if (descBlock && !document.querySelector('.dynamic-specs')) {
-                descBlock.insertAdjacentHTML('afterend', `<div class="dynamic-specs" style="margin-top: 20px;"><h3 style="margin-bottom: 10px; font-size: 16px; color: #c8a96e;">Характеристики</h3>${specsHtml}</div>`);
+            if (descBlock) {
+                descBlock.insertAdjacentHTML('afterend', `
+                    <div class="dynamic-specs" style="margin-top:24px">
+                        <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:#c8a050">Характеристики</h3>
+                        ${specsHtml}
+                    </div>`);
             }
         }
     }
 
-    // 5. Зображення
+    // Фічі
+    if (product.features && product.features.length) {
+        const anchor = document.querySelector('.dynamic-specs,.product-specs,.product-description');
+        if (anchor) {
+            anchor.insertAdjacentHTML('afterend', `
+                <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px">
+                    ${product.features.map(f =>
+                `<span style="background:rgba(200,160,80,.1);border:1px solid rgba(200,160,80,.25);
+                                      border-radius:3px;padding:4px 12px;font-size:12px;color:#c8a050">
+                             ✓ ${esc(f)}</span>`
+            ).join('')}
+                </div>`);
+        }
+    }
+
+    // ── Галерея ─────────────────────────────────────────
     let images = [];
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        images = product.images;
+    if (Array.isArray(product.images) && product.images.length) {
+        images = product.images.filter(Boolean);
     } else if (product.image) {
         images = [product.image];
-    } else {
-        images = ['./images/placeholder.png'];
+    }
+    images = images.map(fixImgPath);
+    if (!images.length) images = ['./images/placeholder.png'];
+
+    const galleryMain = document.querySelector('.product-gallery__main');
+    const placeholder = document.getElementById('gallery-placeholder');
+
+    const mainHtml = `
+        <div style="width:100%;height:450px;overflow:hidden;border-radius:12px;background:#1d1a17">
+            <img id="main-product-img"
+                 src="${images[0]}"
+                 alt="${esc(product.name)}"
+                 style="width:100%;height:100%;object-fit:cover;display:block"
+                 onerror="this.style.display='none'">
+        </div>`;
+
+    if (galleryMain) {
+        galleryMain.innerHTML = mainHtml;
+    } else if (placeholder) {
+        placeholder.outerHTML = mainHtml;
     }
 
-    images = images.map(img => {
-        if (img.startsWith('http')) return img;
-        return img.replace(/^\.\//, '').replace(/^\//, '');
-    });
-
-    const mainPlaceholder = document.getElementById('gallery-placeholder');
-    const thumbsContainer = document.getElementById('gallery-thumbs');
-
-    if (mainPlaceholder) {
-        mainPlaceholder.outerHTML = `
-            <div class="product-gallery__main-image-wrap" style="width: 100%; height: 450px; overflow: hidden; border-radius: 12px; background: #1d1a17;">
-                <img id="main-product-img" src="${images[0]}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-            </div>
-        `;
+    const thumbsEl = document.getElementById('gallery-thumbs');
+    if (thumbsEl) {
+        thumbsEl.innerHTML = images.length > 1
+            ? images.map((src, i) => `
+                <div onclick="wcChangeImg('${src}', this)"
+                     style="width:70px;height:70px;border-radius:8px;overflow:hidden;
+                            cursor:pointer;margin:10px 8px 0 0;display:inline-block;
+                            border:2px solid ${i===0?'#c8a050':'transparent'};transition:border-color .2s">
+                    <img src="${src}" style="width:100%;height:100%;object-fit:cover"
+                         onerror="this.style.display='none'">
+                </div>`).join('')
+            : '';
     }
 
-    if (thumbsContainer && images.length > 1) {
-        thumbsContainer.innerHTML = images.map((img, idx) => `
-            <div class="product-thumb ${idx === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', this)" style="width: 70px; height: 70px; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid ${idx === 0 ? '#c8a96e' : 'transparent'}; display: inline-block; margin-right: 10px; margin-top: 10px;">
-                <img src="${img}" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-        `).join('');
-    } else if (thumbsContainer) {
-        thumbsContainer.innerHTML = '';
-    }
-
-    // 6. Додавання в кошик
+    // ── Кількість ────────────────────────────────────────
     const qtyInput = document.querySelector('.product-qty__input');
-    const minusBtn = document.querySelector('.product-qty__btn--minus');
-    const plusBtn = document.querySelector('.product-qty__btn--plus');
-    const cartBtn = document.querySelector('.product-actions__btn--cart') || document.querySelector('.btn-cart');
+    document.querySelector('.product-qty__btn--minus')
+        ?.addEventListener('click', () => {
+            const v = parseInt(qtyInput?.value) || 1;
+            if (v > 1 && qtyInput) qtyInput.value = v - 1;
+        });
+    document.querySelector('.product-qty__btn--plus')
+        ?.addEventListener('click', () => {
+            if (qtyInput) qtyInput.value = (parseInt(qtyInput.value) || 1) + 1;
+        });
 
-    if (minusBtn && qtyInput) {
-        minusBtn.onclick = () => {
-            let val = parseInt(qtyInput.value) || 1;
-            if (val > 1) qtyInput.value = val - 1;
-        };
+    // ── В кошик ──────────────────────────────────────────
+    function addToCart() {
+        const qty = Math.max(1, parseInt(qtyInput?.value || 1));
+
+        // Ваш cart.js використовує localStorage 'cart' і функцію cartUpdateUI
+        let cartData = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existing = cartData.find(x => String(x.id) === String(product.id));
+        if (existing) {
+            existing.quantity = (existing.quantity || 1) + qty;
+            existing.qty = existing.quantity;
+        } else {
+            cartData.push({
+                id:       product.id,
+                name:     product.name,
+                price:    product.price,
+                image:    images[0],
+                quantity: qty,
+                qty:      qty
+            });
+        }
+        localStorage.setItem('cart', JSON.stringify(cartData));
+
+        // Оновити UI кошика
+        if (typeof cartUpdateUI === 'function') cartUpdateUI();
+
+        // Відкрити кошик
+        const cartEl = document.querySelector('.header__cart');
+        if (cartEl) {
+            cartEl.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (typeof cartOpen === 'function') cartOpen();
     }
 
-    if (plusBtn && qtyInput) {
-        plusBtn.onclick = () => {
-            let val = parseInt(qtyInput.value) || 1;
-            qtyInput.value = val + 1;
-        };
-    }
+    document.querySelector('.product-actions__btn--cart')
+        ?.addEventListener('click', e => { e.preventDefault(); addToCart(); });
 
-    if (cartBtn) {
-        cartBtn.onclick = (e) => {
-            e.preventDefault();
-            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let existing = cart.find(item => String(item.id) === String(product.id));
-
-            if (existing) {
-                existing.quantity += quantity;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: images[0],
-                    quantity: quantity,
-                    specs: product.specs || {}
-                });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-
-            // Відкриваємо виїзну панель лише якщо ми НЕ на сторінці cart.html
-            if (!window.location.pathname.includes('cart.html')) {
-                openCartDrawer();
-            } else if (typeof renderCart === 'function') {
-                renderCart();
-            }
-        };
-    }
+    document.querySelector('.product-actions__btn--buy')
+        ?.addEventListener('click', () => {
+            addToCart();
+            setTimeout(() => { window.location.href = 'order.html'; }, 400);
+        });
 });
 
-// Глобальні функції управління панеллю
-window.openCartDrawer = function() {
-    if (window.location.pathname.includes('cart.html')) return;
-    const cartEl = document.querySelector('.header__cart');
-    const overlay = document.getElementById('cart-overlay');
-    if (cartEl) cartEl.classList.add('open');
-    if (overlay) overlay.classList.add('open');
-    if (typeof renderCart === 'function') renderCart();
+window.wcChangeImg = function(src, el) {
+    const main = document.getElementById('main-product-img');
+    if (main) main.src = src;
+    document.querySelectorAll('[onclick^="wcChangeImg"]')
+        .forEach(t => t.style.borderColor = 'transparent');
+    if (el) el.style.borderColor = '#c8a050';
+};
+
+function normalizeProducts(data) {
+    if (Array.isArray(data))           return data;
+    if (Array.isArray(data?.products)) return data.products;
+    if (data && typeof data === 'object') return Object.values(data);
+    return [];
 }
 
-window.closeCartDrawer = function() {
-    const cartEl = document.querySelector('.header__cart');
-    const overlay = document.getElementById('cart-overlay');
-    if (cartEl) cartEl.classList.remove('open');
-    if (overlay) overlay.classList.remove('open');
+function fixImgPath(src) {
+    if (!src) return './images/placeholder.png';
+    src = String(src).replace(/\\/g, '/');
+    if (src.startsWith('http://') || src.startsWith('https://')) return src;
+    src = src.replace(/^(\/wood_craft_max\/|\.\.\/|\.\/)+/, '');
+    return './' + src;
 }
 
-function changeMainImage(src, el) {
-    const mainImg = document.getElementById('main-product-img');
-    if (mainImg) mainImg.src = src;
-
-    document.querySelectorAll('.product-thumb').forEach(t => t.style.borderColor = 'transparent');
-    if (el) el.style.borderColor = '#c8a96e';
+function fetchT(url, ms) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
 }
+
+function showNotFound(msg) {
+    const page = document.querySelector('.product-page');
+    if (page) page.innerHTML = `
+        <div style="text-align:center;padding:100px 20px;max-width:500px;margin:0 auto">
+            <div style="font-size:52px;margin-bottom:20px">🪵</div>
+            <h2 style="font-size:26px;font-weight:500;margin-bottom:12px">Товар не знайдено</h2>
+            <p style="color:#7a7060;margin-bottom:28px">${msg}</p>
+            <a href="catalog.html"
+               style="display:inline-block;padding:13px 32px;background:#c8a050;
+                      color:#0a0a0a;border-radius:4px;text-decoration:none;font-weight:600">
+                До каталогу →
+            </a>
+        </div>`;
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtNum(n) { return Number(n||0).toLocaleString('uk-UA'); }

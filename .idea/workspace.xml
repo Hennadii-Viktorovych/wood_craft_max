@@ -4,7 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9dc1971b-abf9-4d43-a0e1-c14842916095" name="Changes" comment="" />
+    <list default="true" id="9dc1971b-abf9-4d43-a0e1-c14842916095" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/admin/admin.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/catalog.html" beforeDir="false" afterPath="$PROJECT_DIR$/catalog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/contact.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/header.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/order.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/order.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/products/img_6a9d851bc25f7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/products/img_6a9d854618638.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/catalog.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/catalog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/order.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/json/product.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/product.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/order.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product.html" beforeDir="false" afterPath="$PROJECT_DIR$/product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reviews.html" beforeDir="false" afterPath="$PROJECT_DIR$/reviews.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,9 +38,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="HTML File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -45,7 +70,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gesha/OneDrive/Desktop/wood_craft_max&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gesha/OneDrive/Desktop/wood_craft_max/admin&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
@@ -60,6 +85,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Gesha\OneDrive\Desktop\wood_craft_max\admin" />
       <recent name="C:\Users\Gesha\OneDrive\Desktop\wood_craft_max" />
       <recent name="C:\Users\Gesha\WebstormProjects\wood_craft_max\images" />
       <recent name="C:\Users\Gesha\WebstormProjects\wood_craft_max\images\video" />
@@ -133,7 +159,8 @@
       <workItem from="1788719289435" duration="418000" />
       <workItem from="1788719731113" duration="5560000" />
       <workItem from="1788730020166" duration="22479000" />
-      <workItem from="1788886175589" duration="2803000" />
+      <workItem from="1788886175589" duration="18064000" />
+      <workItem from="1788979669688" duration="6028000" />
     </task>
     <servers />
   </component>

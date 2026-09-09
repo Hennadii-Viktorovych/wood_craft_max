@@ -5,9 +5,32 @@
     <title>Cart</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/cart.css">
 </head>
 <body>
+
+<header class="header">
+    <a href="index.html" class="header__logo-link"><img src="" alt="" class="header__logo-img">wood_craft_max</a>
+
+    <nav class="header__nav">
+        <ul class="header__nav-list">
+            <li class="header__nav-item"><a href="index.html" class="header__nav-link">Головна</a></li>
+            <li class="header__nav-item"><a href="catalog.html" class="header__nav-link">Каталог</a></li>
+            <li class="header__nav-item"><a href="about.html" class="header__nav-link">Про нас</a></li>
+            <li class="header__nav-item"><a href="reviews.html" class="header__nav-link">Відгуки</a></li>
+            <li class="header__nav-item"><a href="contact.html" class="header__nav-link">Контакти</a></li>
+        </ul>
+    </nav>
+
+    <div class="header__cart">
+        <a href="cart.html" class="header__cart-link" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+            <span>Кошик 🛒</span>
+            <span class="cart-count" style="display: none; background: #ff4500; color: #fff; padding: 2px 6px; border-radius: 50%; font-size: 12px;">0</span>
+        </a>
+    </div>
+</header>
+
 
 <main class="cart-page">
     <div class="cart-page-container">

@@ -1,97 +1,147 @@
+/**
+ * js/catalog.js — WoodCraft UA (виправлена версія)
+ * Підключати після cart.js
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
     const catalogGrid = document.querySelector('.catalog__grid');
     if (!catalogGrid) return;
+    if (catalogGrid.dataset.loaded === 'true') return;
+    catalogGrid.dataset.loaded = 'true';
 
     let products = [];
 
-    // На GitHub Pages PHP не працює, тому одразу завантажуємо з JSON-файлу
-    const jsonPaths = [
-        'json/product.json',
-        './json/product.json',
-        '/wood_craft_max/json/product.json'
-    ];
+    // Спроба 1: PHP admin
+    try {
+        const res  = await fetch(`./admin/admin.php?action=get_products&t=${Date.now()}`);
+        const data = await res.json();
+        const raw  = Array.isArray(data) ? data
+            : Array.isArray(data.products) ? data.products
+                : Object.values(data);
+        if (raw.length) products = raw;
+    } catch(e) {}
 
-    for (const path of jsonPaths) {
+    // Спроба 2: JSON напряму
+    if (!products.length) {
         try {
-            const response = await fetch(path);
-            if (response.ok) {
-                const data = await response.json();
-
-                // Якщо дані — це об'єкт з ключами (prod_001, prod_002 тощо)
-                if (data && typeof data === 'object' && !Array.isArray(data)) {
-                    products = Object.values(data);
-                } else if (Array.isArray(data)) {
-                    products = data;
-                } else if (data.products && Array.isArray(data.products)) {
-                    products = data.products;
-                }
-
-                if (products.length > 0) break;
-            }
-        } catch (err) {}
+            const res  = await fetch(`./json/product.json?t=${Date.now()}`);
+            const data = await res.json();
+            const raw  = Array.isArray(data) ? data
+                : Array.isArray(data.products) ? data.products
+                    : Object.values(data);
+            if (raw.length) products = raw;
+        } catch(e) {}
     }
 
-    // Рендеримо товари на сторінку
-    if (products.length > 0) {
-        catalogGrid.innerHTML = '';
+    if (!products.length) {
+        catalogGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#7a7060;padding:40px">Товари відсутні.</p>';
+        return;
+    }
 
-        products.forEach(product => {
-            let imgUrl = './images/placeholder.png';
-            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                imgUrl = product.images[0];
-            } else if (product.image) {
-                imgUrl = product.image;
-            }
-            imgUrl = imgUrl.startsWith('http') ? imgUrl : imgUrl.replace(/^\.\//, '');
+    catalogGrid.innerHTML = '';
 
-            const inStock = product.in_stock !== false;
-            const productUrl = `product.html?id=${product.id}`;
+    products.forEach(product => {
+        // ── Зображення ──────────────────────────────────
+        const rawImg = (product.images && product.images[0])
+            || product.image
+            || product.img
+            || '';
 
-            const card = document.createElement('div');
-            card.className = 'catalog__card';
-            card.setAttribute('data-id', product.id);
+        // Нормалізуємо шлях: видаляємо зайві слеші та ../
+        // Зберігаємо як є — відносно кореня сайту
+        const imgSrc = fixImgPath(rawImg);
 
-            card.innerHTML = `
-                <a href="${productUrl}" class="card__img-wrap" style="display: block; width: 100%; height: 260px; overflow: hidden; background: #1d1a17; border-radius: 8px; margin-bottom: 15px;">
-                    <img src="${imgUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                </a>
-                <div class="card__info">
-                    <h3 class="card__title">
-                        <a href="${productUrl}" style="color: inherit; text-decoration: none;">${product.name}</a>
-                    </h3>
-                    <p class="card__price">${product.price || 0} ₴</p>
-                    <p class="card__status" style="font-size: 12px; color: ${inStock ? '#78a75a' : '#a75a5a'}; margin-bottom: 10px;">
-                        ${inStock ? 'В наявності' : 'Немає в наявності'}
-                    </p>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="${productUrl}" class="card__btn" style="flex: 1; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Детальніше</a>
-                        <button class="card__btn card__btn--cart" aria-label="Додати до кошика" onclick="quickAddToCart('${product.id}', '${encodeURIComponent(product.name)}', ${product.price}, '${imgUrl}')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
-                        </button>
-                    </div>
+        const inStock      = product.in_stock !== false;
+        const productName  = product.name  || product.title || 'Товар';
+        const productPrice = product.price || 0;
+        const productUrl   = `product.html?id=${product.id}`;
+
+        const card = document.createElement('div');
+        card.className = 'catalog__card';
+        card.dataset.id = product.id;
+        card.style.cursor = 'pointer';
+
+        card.innerHTML = `
+            <a href="${productUrl}" class="card__img-wrap"
+               style="display:block;width:100%;height:260px;overflow:hidden;
+                      background:#1d1a17;border-radius:8px;margin-bottom:15px;text-decoration:none">
+                <img src="${imgSrc}"
+                     alt="${esc(productName)}"
+                     style="width:100%;height:100%;object-fit:cover;display:block"
+                     onerror="this.style.display='none'">
+            </a>
+            <div class="card__info">
+                <h3 class="card__title">
+                    <a href="${productUrl}" style="color:inherit;text-decoration:none">${esc(productName)}</a>
+                </h3>
+                <p class="card__price">${fmtNum(productPrice)} ₴</p>
+                <p style="font-size:12px;color:${inStock?'#78a75a':'#a75a5a'};margin-bottom:10px">
+                    ${inStock ? 'В наявності' : 'Немає в наявності'}
+                </p>
+                <div style="display:flex;gap:10px">
+                    <a href="${productUrl}" class="card__btn"
+                       style="flex:1;text-align:center;text-decoration:none;
+                              display:inline-flex;align-items:center;justify-content:center">
+                        Детальніше
+                    </a>
+                    <button class="card__btn card__btn--cart"
+                            onclick="event.preventDefault();event.stopPropagation();
+                                     wcAddToCart(${JSON.stringify({
+            id:    product.id,
+            name:  productName,
+            price: productPrice,
+            image: imgSrc
+        }).replace(/"/g,'&quot;')})">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+                        </svg>
+                    </button>
                 </div>
-            `;
-            catalogGrid.appendChild(card);
-        });
-    } else {
-        catalogGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #7a7060;">Наразі товари відсутні в каталозі.</p>';
-    }
+            </div>
+        `;
+
+        catalogGrid.appendChild(card);
+    });
 });
 
-function quickAddToCart(id, nameEncoded, price, image) {
-    const name = decodeURIComponent(nameEncoded);
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let existing = cart.find(item => String(item.id) === String(id));
-
-    if (existing) {
-        existing.quantity += 1;
+// Додати в кошик — сумісно з вашим cart.js
+function wcAddToCart(product) {
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const ex = cart.find(i => String(i.id) === String(product.id));
+    if (ex) {
+        ex.quantity = (ex.quantity || ex.qty || 1) + 1;
+        ex.qty = ex.quantity;
     } else {
-        cart.push({ id, name, price, image, quantity: 1 });
+        cart.push({ ...product, quantity: 1, qty: 1 });
     }
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Товар успішно додано до кошика!');
+    if (typeof cartUpdateUI === 'function') cartUpdateUI();
+    // Відкрити кошик
+    const cartEl = document.querySelector('.header__cart');
+    if (cartEl) { cartEl.classList.add('active'); window.scrollTo({ top:0, behavior:'smooth' }); }
+}
+
+// Виправляє шлях до зображення
+function fixImgPath(src) {
+    if (!src) return '';
+    src = src.replace(/\\/g, '/');
+
+    // Абсолютний URL — не чіпаємо
+    if (src.startsWith('http://') || src.startsWith('https://')) return src;
+
+    // Прибираємо будь-який префікс типу /wood_craft_max/ або ../
+    src = src.replace(/^(\/wood_craft_max\/|\.\.\/|\.\/)+/, '');
+
+    // Повертаємо відносний шлях від кореня сайту
+    return './' + src;
+}
+
+function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtNum(n) {
+    return Number(n||0).toLocaleString('uk-UA');
 }

@@ -132,3 +132,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9000 мс = 9 секунд експозиції для комфортного читання
     setInterval(changeSlide, 9000);
 });
+

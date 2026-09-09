@@ -47,38 +47,34 @@
 .order-form {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 2.9rem;
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.05);
     padding: 35px;
-    border-radius: 16px;
+    border-radius: 1rem;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .order-form__section {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    gap: 2rem;
 }
 
 .order-form__subtitle {
     font-size: 1.2rem;
     font-weight: 600;
     color: #ff4500; /* Помаранчевий акцент на підзаголовки */
-    margin: 0 0 5px 0;
     letter-spacing: 0.5px;
 }
 
 .order-form__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
 }
 
 /* Поля вводу та селекти */
 .order-form__input,
 .order-form__textarea {
-    width: 100%;
     padding: 14px 18px;
     background-color: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -127,7 +123,7 @@
 .order-form__radio-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6rem;
 }
 
 .order-form__radio-label {
